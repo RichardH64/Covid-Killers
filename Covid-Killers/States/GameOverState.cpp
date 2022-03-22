@@ -3,6 +3,14 @@
 //===INITIALIZE FUNCTIONS===//
 void GameOverState::initTextures()
 {
+	//===Init Button Textures===//
+	this->textureButton.insert({ "Blank", new sf::Texture });
+	this->textureButton.insert({ "Quit", new sf::Texture });
+
+	this->textureButton["Blank"]->loadFromFile("Assets/Buttons/ButtonBlank.png");
+	this->textureButton["Quit"]->loadFromFile("Assets/Buttons/ButtonQuit.png");
+	//---Init Button Textures---//
+
 	this->textTitle.setFont(this->fontConnectionII);
 	this->textTitle.setCharacterSize(128);
 	this->textTitle.setStyle(sf::Text::Bold);
@@ -17,8 +25,8 @@ void GameOverState::initTextures()
 
 void GameOverState::initButtons()
 {
-	this->buttons.push_back(new Button(this->window, "Assets/PauseState/ButtonContinue.png", this->booleans["RetryGameState"], true, 0.f, 225.f));
-	this->buttons.push_back(new Button(this->window, "Assets/ButtonQuit.png", this->booleans["QuitGameState"], true, 0.f, 300.f));
+	this->buttons.push_back(new Button(this->window, this->textureButton["Blank"], this->booleans["RetryGameState"], true, 0.f, 225.f));
+	this->buttons.push_back(new Button(this->window, this->textureButton["Quit"], this->booleans["QuitGameState"], true, 0.f, 300.f));
 }
 //---INITIALIZE FUNCTIONS---//
 
@@ -36,6 +44,9 @@ GameOverState::~GameOverState()
 		delete i;
 	}
 	this->buttons.clear();
+
+	delete this->textureButton["Blank"];
+	delete this->textureButton["Quit"];
 }
 
 void GameOverState::endState()
@@ -49,18 +60,13 @@ void GameOverState::confirmQuit()
 
 void GameOverState::updateInput()
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-	{
-		this->quit = true;
-	}
 }
 
 void GameOverState::update(const float& dt)
 {
-	//this->updateInput();
-	for (auto& i : this->buttons)
+	for (int i = 0; i < this->buttons.size(); i++)
 	{
-		i->update(*this->mosPosView);
+		this->buttons[i]->update(*this->mosPosView);
 	}
 }
 
@@ -68,8 +74,8 @@ void GameOverState::render(sf::RenderTarget* target)
 {
 	target->draw(this->textTitle);
 
-	for (auto& i : this->buttons)
+	for (int i = 0; i < this->buttons.size(); i++)
 	{
-		i->render(target);
+		this->buttons[i]->render(target);
 	}
 }

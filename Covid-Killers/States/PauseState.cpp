@@ -3,6 +3,16 @@
 //===INITIALIZE FUNCTIONS===//
 void PauseState::initTextures()
 {
+	//===Init Button Textures===//
+	this->textureButton.insert({ "Continue", new sf::Texture });
+	this->textureButton.insert({ "Settings", new sf::Texture });
+	this->textureButton.insert({ "Quit", new sf::Texture });
+
+	this->textureButton["Continue"]->loadFromFile("Assets/Buttons/ButtonContinue.png");
+	this->textureButton["Settings"]->loadFromFile("Assets/Buttons/ButtonSettings.png");
+	this->textureButton["Quit"]->loadFromFile("Assets/Buttons/ButtonQuit.png");
+	//---Init Button Textures---//
+
 	this->textTitle.setFont(this->fontConnectionII);
 	this->textTitle.setCharacterSize(128);
 	this->textTitle.setStyle(sf::Text::Bold);
@@ -19,9 +29,9 @@ void PauseState::initButtons()
 {
 	this->booleans.insert({"ContinueGameState", &this->quit}); // ContinueGameState = QuitPauseState
 
-	this->buttons.push_back(new Button(this->window, "Assets/PauseState/ButtonContinue.png", this->booleans["ContinueGameState"], true, 0.f, 150.f));
-	this->buttons.push_back(new Button(this->window, "Assets/ButtonSettings.png", new bool, true, 0.f, 225.f));
-	this->buttons.push_back(new Button(this->window, "Assets/ButtonQuit.png", this->booleans["QuitGameState"], true, 0.f, 300.f));
+	this->buttons.push_back(new Button(this->window, this->textureButton["Continue"], this->booleans["ContinueGameState"], true, 0.f, 150.f));
+	this->buttons.push_back(new Button(this->window, this->textureButton["Settings"], new bool, true, 0.f, 225.f));
+	this->buttons.push_back(new Button(this->window, this->textureButton["Quit"], this->booleans["QuitGameState"], true, 0.f, 300.f));
 }
 //---INITIALIZE FUNCTIONS---//
 PauseState::PauseState(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::Vector2f* mosPosView, std::map<std::string, bool*> booleans) : State(window, mosPosWindow, mosPosView, booleans)
@@ -40,6 +50,10 @@ PauseState::~PauseState()
 		delete i;
 	}
 	this->buttons.clear();
+
+	delete this->textureButton["Continue"];
+	delete this->textureButton["Settings"];
+	delete this->textureButton["Quit"];
 }
 
 void PauseState::endState()
@@ -66,9 +80,10 @@ void PauseState::update(const float& dt)
 {
 	this->cooldownCreation += sf::seconds(dt);
 	this->updateInput();
-	for (auto& i : this->buttons)
+
+	for (int i = 0; i < this->buttons.size(); i++)
 	{
-		i->update(*this->mosPosView);
+		this->buttons[i]->update(*this->mosPosView);
 	}
 }
 
@@ -76,8 +91,8 @@ void PauseState::render(sf::RenderTarget* target)
 {
 	target->draw(this->textTitle);
 
-	for (auto& i : this->buttons)
+	for (int i = 0; i < this->buttons.size(); i++)
 	{
-		i->render(target);
+		this->buttons[i]->render(target);
 	}
 }

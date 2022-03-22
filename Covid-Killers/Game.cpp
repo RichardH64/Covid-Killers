@@ -31,8 +31,10 @@ void Game::initWindow()
 void Game::initBooleans()
 {
     this->booleans.insert({"CreateGameState", new bool});
+    this->booleans.insert({"RetryGameState", new bool});
 
     *this->booleans["CreateGameState"] = false;
+    *this->booleans["RetryGameState"] = false;
 }
 
 void Game::initStates()
@@ -105,7 +107,7 @@ void Game::updateMousePostions()
     this->mosPosView = this->window->mapPixelToCoords(this->mosPosWindow);
 }
 
-void Game::updateStateBank()
+void Game::updateBools()
 {
     switch (*this->booleans["CreateGameState"])
     {
@@ -116,6 +118,30 @@ void Game::updateStateBank()
     default:
         break;
     }
+
+    switch (*this->booleans["RetryGameState"])
+    {
+    case true:
+        this->states.top()->confirmQuit();
+        /*
+        if (this->states.top()->getQuit())
+        {
+            this->states.top()->endState();
+            delete this->states.top();
+            this->states.pop();
+            this->states.push(new GameState(this->window, &this->mosPosWindow, &this->mosPosView, this->booleans));
+        }
+        */
+        this->states.top()->endState();
+        delete this->states.top();
+        this->states.pop();
+        this->states.push(new GameState(this->window, &this->mosPosWindow, &this->mosPosView, this->booleans));
+        *this->booleans["RetryGameState"] = false;
+        break;
+    default:
+        break;
+    }
+
 }
 
 void Game::updateStates()
@@ -145,7 +171,7 @@ void Game::update()
 {
     this->updateEvents();
     this->updateMousePostions();
-    this->updateStateBank();
+    this->updateBools();
     this->updateStates();
 }
 //---UPDATE--//

@@ -19,10 +19,9 @@ protected:
 
 	sf::RenderWindow* window;
 	sf::RectangleShape hitBox;
-	sf::Texture texture;
 	sf::Sprite sprite;
 public:
-	Button(sf::RenderWindow* window, std::string pathToFile, bool* condition, bool boolean, float xPos, float yPos);
+	Button(sf::RenderWindow* window, sf::Texture* texture, bool* condition, bool boolean, float xPos, float yPos);
 	virtual ~Button();
 
 	void onClick();

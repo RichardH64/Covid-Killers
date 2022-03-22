@@ -6,6 +6,9 @@ class GameOverState : public State
 {
 private:
 	sf::Text textTitle;
+
+	std::map<std::string, sf::Texture*> textureButton;
+
 	void initTextures() override;
 	void initButtons() override;
 public:

@@ -50,7 +50,7 @@ public:
 	void updateEvents();
 	void updateMousePostions();
 
-	void updateStateBank();
+	void updateBools();
 	void updateStates();
 	void update();
 	//---UPDATE---//

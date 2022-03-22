@@ -1,11 +1,10 @@
 #include "Button.h"
 
 
-Button::Button(sf::RenderWindow* window, std::string pathToFile, bool* condition, bool boolean, float xPos, float yPos)
+Button::Button(sf::RenderWindow* window, sf::Texture* texture, bool* condition, bool boolean, float xPos, float yPos)
 {
 	//===PRIMARY===//
 	this->window = window;
-	this->texture.loadFromFile(pathToFile);
 
 	this->scaleX = this->window->getSize().x / 1280.f;
 	this->scaleY = this->window->getSize().y / 720.f;
@@ -19,14 +18,14 @@ Button::Button(sf::RenderWindow* window, std::string pathToFile, bool* condition
 	this->boolean = boolean;
 	this->buttonState = buttonStates::BTNIDLE;
 
-	this->width = texture.getSize().x * this->scaleX;
-	this->height = texture.getSize().y * this->scaleY;
-	this->xPos = this->window->getSize().x / 2.f - this->width / 2.f + (xPos * (this->window->getSize().x /1280.f));
+	this->width = texture->getSize().x * this->scaleX;
+	this->height = texture->getSize().y * this->scaleY;
+	this->xPos = this->window->getSize().x / 2.f - this->width / 2.f + (xPos * (this->window->getSize().x / 1280.f));
 	this->yPos = this->window->getSize().y / 2.f - this->height / 2.f + (yPos * (this->window->getSize().y / 720.f));
 	//---BASIC DATA===//
 
 	//===GRAPHICS===//
-	this->sprite = sf::Sprite(this->texture);
+	this->sprite = sf::Sprite(*texture);
 	this->sprite.setScale(sf::Vector2f(this->scaleX, this->scaleY));
 	this->sprite.setPosition(this->xPos, this->yPos);
 	//---GRAPHICS---//
@@ -46,12 +45,11 @@ Button::~Button()
 void Button::onClick()
 {
 	*this->condition = this->boolean;
-	std::cout << "Hi\n";
 }
 
 void Button::update(const sf::Vector2f mosPos)
 {
-	if (this->hitBox.getGlobalBounds().contains(mosPos))
+	if (this->sprite.getGlobalBounds().contains(mosPos))
 	{
 		this->buttonState = buttonStates::BTNHOVER;
 		// Will Check if button is pressed or released
@@ -81,6 +79,8 @@ void Button::update(const sf::Vector2f mosPos)
 	{
 		this->buttonState = buttonStates::BTNIDLE;
 	}
+	//if (this->hitBox.getGlobalBounds().contains(mosPos))
+
 
 	switch (this->buttonState)
 	{
@@ -103,5 +103,5 @@ void Button::update(const sf::Vector2f mosPos)
 void Button::render(sf::RenderTarget* target)
 {
 	target->draw(this->sprite);
-	target->draw(this->hitBox);
+	//target->draw(this->hitBox);
 }

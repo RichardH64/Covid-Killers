@@ -83,7 +83,7 @@ GameState::GameState(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::V
 	this->booleansPause.insert({ "PauseGameState", &this->pause });
 	this->booleansPause.insert({ "QuitGameState", &this->quit });
 
-	this->booleansGameOver.insert({ "RetryGameState", &this->restart });
+	this->booleansGameOver.insert({ "RetryGameState", this->booleans["RetryGameState"] });
 	this->booleansGameOver.insert({ "QuitGameState", &this->quit });
 	//---Init Boolean (Maps)---//
 

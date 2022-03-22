@@ -3,6 +3,20 @@
 //===INITIALIZE FUNCTIONS===//
 void TitleState::initTextures()
 {
+	//===Init Button Textures===//
+	this->textureButton.insert({ "Start", new sf::Texture });
+	this->textureButton.insert({"HighScore", new sf::Texture});
+	this->textureButton.insert({"Blank", new sf::Texture});
+	this->textureButton.insert({"Settings", new sf::Texture});
+	this->textureButton.insert({"Quit", new sf::Texture});
+
+	this->textureButton["Start"]->loadFromFile("Assets/Buttons/ButtonStart.png");
+	this->textureButton["HighScore"]->loadFromFile("Assets/Buttons/ButtonHighScore.png");
+	this->textureButton["Blank"]->loadFromFile("Assets/Buttons/ButtonBlank.png");
+	this->textureButton["Settings"]->loadFromFile("Assets/Buttons/ButtonSettings.png");
+	this->textureButton["Quit"]->loadFromFile("Assets/Buttons/ButtonQuit.png");
+	//---Init Button Textures---//
+
 	this->textureBackground = new sf::Texture;
 	this->textureBackground->loadFromFile("Assets/GameState/Background.png");
 
@@ -23,10 +37,12 @@ void TitleState::initTextures()
 void TitleState::initButtons()
 {
 	this->booleans.insert({"QuitGame", &this->quit});
-	this->buttons.push_back(new Button(this->window, "Assets/TitleState/ButtonStart.png", this->booleans["CreateGameState"], true, -132.5f, 150.f));
-	this->buttons.push_back(new Button(this->window, "Assets/TitleState/ButtonHighScore.png", new bool, true, 132.5f, 150.f));
-	this->buttons.push_back(new Button(this->window, "Assets/ButtonSettings.png", new bool, true, 132.5f, 225.f));
-	this->buttons.push_back(new Button(this->window, "Assets/ButtonQuit.png", this->booleans["QuitGame"], true, 0.f, 300.f));
+
+	this->buttons.push_back(new Button(this->window, this->textureButton["Start"], this->booleans["CreateGameState"], true, -132.5f, 150.f));
+	this->buttons.push_back(new Button(this->window, this->textureButton["HighScore"], new bool, true, 132.5f, 150.f));
+	this->buttons.push_back(new Button(this->window, this->textureButton["Blank"], new bool, true, -132.5f, 225.f));
+	this->buttons.push_back(new Button(this->window, this->textureButton["Settings"], new bool, true, 132.5f, 225.f));
+	this->buttons.push_back(new Button(this->window, this->textureButton["Quit"], this->booleans["QuitGame"], true, 0.f, 300.f));
 }
 //---INITIALIZE FUNCTIONS---//
 
@@ -44,6 +60,14 @@ TitleState::~TitleState()
 		delete i;
 	}
 	this->buttons.clear();
+
+	delete this->textureBackground;
+	delete this->textureButton["Start"];
+	delete this->textureButton["HighScore"];
+	delete this->textureButton["Blank"];
+	delete this->textureButton["Settings"];
+	delete this->textureButton["Quit"];
+
 }
 
 void TitleState::endState()
@@ -60,9 +84,9 @@ void TitleState::updateInput()
 
 void TitleState::update(const float& dt)
 {
-	for (auto& i : this->buttons)
+	for (int i = 0; i < this->buttons.size(); i++)
 	{
-		i->update(*this->mosPosView);
+		this->buttons[i]->update(*this->mosPosView);
 	}
 }
 
@@ -70,9 +94,9 @@ void TitleState::render(sf::RenderTarget* target)
 {
 	this->background->render(target);
 
-	for (auto& i : this->buttons)
+	for (int i = 0; i < this->buttons.size(); i++)
 	{
-		i->render(target);
+		this->buttons[i]->render(target);
 	}
 
 	target->draw(this->textTitle);

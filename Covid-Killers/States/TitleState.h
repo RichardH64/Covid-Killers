@@ -10,7 +10,10 @@ class TitleState : public State
 {
 private:
 	sf::Text textTitle;
+
+	std::map<std::string, sf::Texture*> textureButton;
 	sf::Texture* textureBackground;
+
 	GSTileSet* background;
 
 	void initTextures() override;
