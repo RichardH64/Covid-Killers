@@ -1,11 +1,11 @@
 #include "Stats.h"
 
-Stats::Stats(float* time, double* score, int* kills)
+Stats::Stats(float x, float y, float w, float l, float* time, double* score, int* kills) : GUI(x, y, w, l)
 {
     this->time = time;
     this->score = score;
     this->kills = kills;
-    this-fontConnectionII.loadFromFile("Assets/Fonts/ConnectionIi-2wj8.otf");
+    this->fontConnectionII.loadFromFile("Assets/Fonts/ConnectionIi-2wj8.otf");
 
     this->textTime.setFont(this->fontConnectionII);
 	this->textTime.setCharacterSize(32);
@@ -29,4 +29,12 @@ Stats::Stats(float* time, double* score, int* kills)
 Stats::~Stats()
 {
 
+}
+
+void Stats::update()
+{
+}
+
+void Stats::render(sf::RenderTarget* target)
+{
 }

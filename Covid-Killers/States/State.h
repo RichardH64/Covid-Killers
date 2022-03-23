@@ -35,6 +35,7 @@ public:
 	const bool& getQuit() const;
 	virtual void endState() = 0;
 	virtual void confirmQuit() = 0;
+	virtual void resetButton() = 0;
 	virtual void updateInput() = 0;
 	virtual void update(const float& dt) = 0;
 	virtual void render(sf::RenderTarget* target = NULL) = 0;

@@ -1,9 +1,9 @@
 #ifndef STATS_H
 #define STATS_H
 
-#include "../Includes.h"
+#include "GUI.h"
 
-class Stats
+class Stats : public GUI
 {
 private:
 	float* time;
@@ -15,16 +15,14 @@ private:
     sf::Text textScore;
     sf::Text textKills;
 
-	float x, y, w, l;
-
 	sf::RectangleShape back, front;
 public:
-	Stats(float* time, double* score, int* kills);
+	Stats(float x, float y, float w, float l, float* time, double* score, int* kills);
 	virtual ~Stats();
 
     void updateText();
-	void update();
-	void render(sf::RenderTarget* target);
+	void update() override;
+	void render(sf::RenderTarget* target) override;
 };
 
 #endif

@@ -151,6 +151,7 @@
     <ClCompile Include="Entity\Entity.cpp" />
     <ClCompile Include="Entity\Player.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GUI\GUI.cpp" />
     <ClCompile Include="GUI\Stats.cpp" />
     <ClCompile Include="States\GameOverState.cpp" />
     <ClCompile Include="GUI\Bar.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="Entity\Entity.h" />
     <ClInclude Include="Entity\Player.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GUI\GUI.h" />
     <ClInclude Include="GUI\Stats.h" />
     <ClInclude Include="States\GameOverState.h" />
     <ClInclude Include="GUI\Bar.h" />
@@ -181,7 +183,10 @@
     <ClInclude Include="TileSets\GSTileSet.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Fonts\connection-ii-font.zip" />
+    <None Include="Assets\Fonts\misc\Connection II-1260.sfd" />
     <None Include="openal32.dll" />
+    <None Include="Setting\window.ini" />
     <None Include="sfml-audio-2.dll" />
     <None Include="sfml-audio-d-2.dll" />
     <None Include="sfml-graphics-2.dll" />
@@ -194,7 +199,39 @@
     <None Include="sfml-window-d-2.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Assets\Buttons\ButtonBack.png" />
+    <Image Include="Assets\Buttons\ButtonBlank.png" />
+    <Image Include="Assets\Buttons\ButtonContinue.png" />
+    <Image Include="Assets\Buttons\ButtonGoBack.png" />
+    <Image Include="Assets\Buttons\ButtonHighScore.png" />
+    <Image Include="Assets\Buttons\ButtonPlay.png" />
+    <Image Include="Assets\Buttons\ButtonQuit.png" />
     <Image Include="Assets\Buttons\ButtonRetry.png" />
+    <Image Include="Assets\Buttons\ButtonSettings.png" />
+    <Image Include="Assets\Buttons\ButtonStart.png" />
+    <Image Include="Assets\GameState\AntiBody.png" />
+    <Image Include="Assets\GameState\Background.png" />
+    <Image Include="Assets\GameState\Border.png" />
+    <Image Include="Assets\GameState\Delta.png" />
+    <Image Include="Assets\GameState\LevelFive.png" />
+    <Image Include="Assets\GameState\LevelFour.png" />
+    <Image Include="Assets\GameState\LevelOne.png" />
+    <Image Include="Assets\GameState\LevelThree.png" />
+    <Image Include="Assets\GameState\LevelTwo.png" />
+    <Image Include="Assets\GameState\Omi.png" />
+    <Image Include="Assets\GameState\Sars.png" />
+    <Image Include="Assets\GameState\WBloodCell.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Assets\Fonts\BrassMonoComfortableRegular-XmYK.otf" />
+    <Font Include="Assets\Fonts\BrassMonoComfortableRegular-XmYK.ttf" />
+    <Font Include="Assets\Fonts\BrassMonoComfortableRegular.otf" />
+    <Font Include="Assets\Fonts\ConnectionIi-2wj8.otf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Assets\Fonts\info-BrassMonoComfortableRegular.txt" />
+    <Text Include="Assets\Fonts\info.txt" />
+    <Text Include="Assets\Fonts\misc\SIL Open Font License-7679.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

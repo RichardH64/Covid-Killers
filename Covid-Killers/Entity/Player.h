@@ -12,11 +12,14 @@ private:
 	double energy, energyMax;
 	double stamina, staminaMax;
 	double blastDrain, staminaDrain;
+
 	sf::Time cooldownSB, cooldownSBMax; // Cooldown Single Blast
 	sf::Time cooldownEnergy, cooldownEnergyMax; // Cooldown Energy
 	sf::Time cooldownStamina, cooldownStaminaMax; // Cooldown Stamina
+
 	bool isSprinting, isBlasting, spacePressed;
 	Bar* bars[3];
+
 public:
 	Player(sf::RenderWindow* window, sf::Texture* texture, float x, float y, Level level = Level::ONE);
 	virtual ~Player();

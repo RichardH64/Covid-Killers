@@ -65,6 +65,15 @@ void PauseState::confirmQuit()
 {
 }
 
+void PauseState::resetButton()
+{
+	for (int i = 0; i < this->buttons.size(); i++)
+	{
+		this->buttons[i]->reset();
+	}
+}
+
+
 void PauseState::updateInput()
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
@@ -96,3 +105,4 @@ void PauseState::render(sf::RenderTarget* target)
 		this->buttons[i]->render(target);
 	}
 }
+

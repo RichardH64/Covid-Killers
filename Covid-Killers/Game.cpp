@@ -112,6 +112,7 @@ void Game::updateBools()
     switch (*this->booleans["CreateGameState"])
     {
     case true:
+        this->states.top()->resetButton();
         this->states.push(new GameState(this->window, &this->mosPosWindow, &this->mosPosView, this->booleans));
         *this->booleans["CreateGameState"] = false;
         break;

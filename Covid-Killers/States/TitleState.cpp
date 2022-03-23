@@ -78,6 +78,14 @@ void TitleState::confirmQuit()
 {
 }
 
+void TitleState::resetButton()
+{
+	for (int i = 0; i < this->buttons.size(); i++)
+	{
+		this->buttons[i]->reset();
+	}
+}
+
 void TitleState::updateInput()
 {
 }

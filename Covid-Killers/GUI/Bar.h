@@ -1,23 +1,22 @@
 #ifndef BAR_H
 #define BAR_H
 
-#include "../Includes.h"
+#include "GUI.h"
 
-class Bar
+class Bar : public GUI
 {
 private:
 	double* val;
 	double* valMax;
 	double ratio;
-	float x, y, w, l;
 
 	sf::RectangleShape back, front;
 public:
-	Bar(double* val, double* valMax, float x, float y, float w, float l, sf::Color color = sf::Color::Red);
+	Bar(float x, float y, float w, float l, double* val, double* valMax, sf::Color color = sf::Color::Red);
 	virtual ~Bar();
 
-	void update();
-	void render(sf::RenderTarget* target);
+	void update() override;
+	void render(sf::RenderTarget* target) override;
 };
 
 #endif

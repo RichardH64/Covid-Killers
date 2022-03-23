@@ -29,6 +29,7 @@ public:
 	void onClick();
 	void setActive();
 	void setUnactive();
+	void reset();
 	void updateTimers(const float& dt);
 	void update(const float& dt, const sf::Vector2f mosPos);
 	void render(sf::RenderTarget* target);

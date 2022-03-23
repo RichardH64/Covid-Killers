@@ -1,7 +1,7 @@
 #include "Button.h"
 
 
-const sf::Time Button::lastClickedMax = sf::seconds(2.f);
+const sf::Time Button::lastClickedMax = sf::seconds(0.25f);
 
 Button::Button(sf::RenderWindow* window, sf::Texture* texture, bool* condition, bool boolean, float xPos, float yPos)
 {
@@ -61,11 +61,16 @@ void Button::setUnactive()
 	this->active = false;
 }
 
+void Button::reset()
+{
+	this->lastClicked = sf::seconds(0.f);
+}
+
 void Button::updateTimers(const float& dt)
 {
 	this->lastClicked += sf::seconds(dt);
 
-	if (this->lastClicked >= this->lastClickedMax * 3.f) { this->lastClicked = this->lastClickedMax; } // Just so it doesn't hold up too much space
+	if (this->lastClicked >= (this->lastClickedMax * 3.f)) { this->lastClicked = this->lastClickedMax; } // Just so it doesn't hold up too much space
 }
 
 void Button::update(const float& dt, const sf::Vector2f mosPos)

@@ -61,7 +61,7 @@ public:
 
 	void endState() override;
 	void confirmQuit() override;
-
+	void resetButton() override;
 	
 	void updateLevel(); 
 	void updateTimers(const float& dt);

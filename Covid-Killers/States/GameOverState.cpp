@@ -58,6 +58,15 @@ void GameOverState::confirmQuit()
 {
 }
 
+void GameOverState::resetButton()
+{
+	for (int i = 0; i < this->buttons.size(); i++)
+	{
+		this->buttons[i]->reset();
+	}
+}
+
+
 void GameOverState::updateInput()
 {
 } 

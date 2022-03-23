@@ -19,6 +19,7 @@ public:
 
 	void endState() override;
 	void confirmQuit() override;
+	void resetButton() override;
 	void updateInput() override;
 	void update(const float& dt) override;
 	void render(sf::RenderTarget* target = NULL) override;

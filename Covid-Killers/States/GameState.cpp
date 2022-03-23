@@ -178,6 +178,10 @@ void GameState::confirmQuit()
 {
 }
 
+void GameState::resetButton()
+{
+}
+
 //void flashLevel
 
 void GameState::updateLevel()

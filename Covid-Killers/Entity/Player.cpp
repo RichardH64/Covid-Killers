@@ -55,9 +55,9 @@ Player::Player(sf::RenderWindow* window, sf::Texture* texture, float x, float y,
 		break;
 	}
 
-	this->bars[0] = new Bar(&this->hp, &this->hpMax, 0.f, 0.f, 300.f, 35.f, sf::Color::Red);
-	this->bars[1] = new Bar(&this->energy, &this->energyMax, 0.f, 35.f, 250.f, 35.f, sf::Color::Blue);
-	this->bars[2] = new Bar(&this->stamina, &this->staminaMax, 0.f, 70.f, 200.f, 35.f, sf::Color::Green);
+	this->bars[0] = new Bar(0.f, 0.f, 300.f, 35.f, &this->hp, &this->hpMax, sf::Color::Red);
+	this->bars[1] = new Bar(0.f, 35.f, 250.f, 35.f, &this->energy, &this->energyMax, sf::Color::Blue);
+	this->bars[2] = new Bar(0.f, 70.f, 200.f, 35.f, &this->stamina, &this->staminaMax, sf::Color::Green);
 }
 
 Player::~Player()
@@ -178,8 +178,8 @@ void Player::updateMovement()
 	{
 		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) && this->stamina > 0.0 && (this->stamina > this->staminaDrain * 2.0 || this->isSprinting)) 
 		{ 	
-			this->hitBox.move(0.f, -(this->speed * 2.5));
-			this->sprite.move(0.f, -(this->speed * 2.5));
+			this->hitBox.move(0.f, -(this->speed * 2.5f));
+			this->sprite.move(0.f, -(this->speed * 2.5f));
 			this->stamina -= this->staminaDrain; 
 			this->isSprinting = true; 
 		}
@@ -194,8 +194,8 @@ void Player::updateMovement()
 	{
 		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) && this->stamina > 0.0 && (this->stamina > this->staminaDrain * 2.0 || this->isSprinting))
 		{
-			this->hitBox.move(0.f, (this->speed * 2.5));
-			this->sprite.move(0.f, (this->speed * 2.5));
+			this->hitBox.move(0.f, (this->speed * 2.5f));
+			this->sprite.move(0.f, (this->speed * 2.5f));
 			this->stamina -= this->staminaDrain;
 			this->isSprinting = true;
 		}
@@ -211,8 +211,8 @@ void Player::updateMovement()
 	{
 		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) && this->stamina > 0.0 && (this->stamina > this->staminaDrain * 2.0 || this->isSprinting))
 		{
-			this->hitBox.move(-(this->speed * 2.5), 0.f);
-			this->sprite.move(-(this->speed * 2.5), 0.f);
+			this->hitBox.move(-(this->speed * 2.5f), 0.f);
+			this->sprite.move(-(this->speed * 2.5f), 0.f);
 			this->stamina -= this->staminaDrain;
 			this->isSprinting = true;
 		}
@@ -227,8 +227,8 @@ void Player::updateMovement()
 	{
 		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) && this->stamina > 0.0 && (this->stamina > this->staminaDrain * 2.0 || this->isSprinting))
 		{
-			this->hitBox.move((this->speed * 2.5), 0.f);
-			this->sprite.move((this->speed * 2.5), 0.f);
+			this->hitBox.move((this->speed * 2.5f), 0.f);
+			this->sprite.move((this->speed * 2.5f), 0.f);
 			this->stamina -= this->staminaDrain;
 			this->isSprinting = true;
 		}
