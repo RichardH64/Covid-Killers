@@ -4,10 +4,10 @@
 void GameOverState::initTextures()
 {
 	//===Init Button Textures===//
-	this->textureButton.insert({ "Blank", new sf::Texture });
+	this->textureButton.insert({ "Retry", new sf::Texture });
 	this->textureButton.insert({ "Quit", new sf::Texture });
 
-	this->textureButton["Blank"]->loadFromFile("Assets/Buttons/ButtonBlank.png");
+	this->textureButton["Retry"]->loadFromFile("Assets/Buttons/ButtonRetry.png");
 	this->textureButton["Quit"]->loadFromFile("Assets/Buttons/ButtonQuit.png");
 	//---Init Button Textures---//
 
@@ -25,7 +25,7 @@ void GameOverState::initTextures()
 
 void GameOverState::initButtons()
 {
-	this->buttons.push_back(new Button(this->window, this->textureButton["Blank"], this->booleans["RetryGameState"], true, 0.f, 225.f));
+	this->buttons.push_back(new Button(this->window, this->textureButton["Retry"], this->booleans["RetryGameState"], true, 0.f, 225.f));
 	this->buttons.push_back(new Button(this->window, this->textureButton["Quit"], this->booleans["QuitGameState"], true, 0.f, 300.f));
 }
 //---INITIALIZE FUNCTIONS---//
@@ -60,13 +60,13 @@ void GameOverState::confirmQuit()
 
 void GameOverState::updateInput()
 {
-}
+} 
 
 void GameOverState::update(const float& dt)
 {
 	for (int i = 0; i < this->buttons.size(); i++)
 	{
-		this->buttons[i]->update(*this->mosPosView);
+		this->buttons[i]->update(dt, *this->mosPosView);
 	}
 }
 

@@ -1,6 +1,8 @@
 #include "Button.h"
 
 
+const sf::Time Button::lastClickedMax = sf::seconds(2.f);
+
 Button::Button(sf::RenderWindow* window, sf::Texture* texture, bool* condition, bool boolean, float xPos, float yPos)
 {
 	//===PRIMARY===//
@@ -8,6 +10,8 @@ Button::Button(sf::RenderWindow* window, sf::Texture* texture, bool* condition, 
 
 	this->scaleX = this->window->getSize().x / 1280.f;
 	this->scaleY = this->window->getSize().y / 720.f;
+
+	this->lastClicked = this->lastClickedMax;
 	//---PRIMARY---//
 
 	//===BASIC DATA===//
@@ -29,12 +33,6 @@ Button::Button(sf::RenderWindow* window, sf::Texture* texture, bool* condition, 
 	this->sprite.setScale(sf::Vector2f(this->scaleX, this->scaleY));
 	this->sprite.setPosition(this->xPos, this->yPos);
 	//---GRAPHICS---//
-
-	//===HITBOX===//
-	this->hitBox.setFillColor(sf::Color::Transparent);
-	this->hitBox.setSize(sf::Vector2f(this->width, this->height));
-	this->hitBox.setPosition(sf::Vector2f(this->xPos, this->yPos));
-	//---HITBOX---//
 }
 
 Button::~Button()
@@ -47,55 +45,62 @@ void Button::onClick()
 	*this->condition = this->boolean;
 }
 
-void Button::update(const sf::Vector2f mosPos)
+void Button::setActive()
 {
+	this->sprite.setScale(sf::Vector2f(this->scaleX + .05f, this->scaleY + .05f));
+	this->sprite.setPosition(this->xPos - 7.5f, this->yPos - 7.5f);
+
+	this->active = true;
+}
+
+void Button::setUnactive()
+{
+	this->sprite.setScale(sf::Vector2f(this->scaleX, this->scaleY));
+	this->sprite.setPosition(this->xPos, this->yPos);
+
+	this->active = false;
+}
+
+void Button::updateTimers(const float& dt)
+{
+	this->lastClicked += sf::seconds(dt);
+
+	if (this->lastClicked >= this->lastClickedMax * 3.f) { this->lastClicked = this->lastClickedMax; } // Just so it doesn't hold up too much space
+}
+
+void Button::update(const float& dt, const sf::Vector2f mosPos)
+{
+	this->updateTimers(dt);
+
 	if (this->sprite.getGlobalBounds().contains(mosPos))
 	{
 		this->buttonState = buttonStates::BTNHOVER;
-		// Will Check if button is pressed or released
-		switch (pressed)
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
-		case false:
-		{
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			if (this->lastClicked >= this->lastClickedMax)
 			{
-				this->pressed = true;
-				// Trigger button pressed sound
-			}
-			break;
-		}
-		case true:
-		{
-			if (!sf::Mouse::isButtonPressed(sf::Mouse::Left))
-			{
-				this->pressed = false;
 				this->buttonState = buttonStates::BTNPRESSED;
+				this->lastClicked = sf::seconds(0.f);
 			}
-			break;
-		}
 		}
 	}
-	else
-	{
-		this->buttonState = buttonStates::BTNIDLE;
+	else 
+	{ 
+		this->buttonState = buttonStates::BTNIDLE; 
 	}
-	//if (this->hitBox.getGlobalBounds().contains(mosPos))
-
 
 	switch (this->buttonState)
 	{
 	case buttonStates::BTNIDLE:
-		this->hover = false;
-		this->pressed = false;
+		if (this->active) { this->setUnactive(); }
 		break;
 	case buttonStates::BTNHOVER:
-		this->hover = true;
+		if (!this->active) { this->setActive(); }
 		break;
 	case buttonStates::BTNPRESSED:
 		this->onClick();
-		this->buttonState = buttonStates::BTNHOVER;
-		break;
-	default:
+		if (this->active) { this->setUnactive(); }
+		this->buttonState = buttonStates::BTNIDLE;
 		break;
 	}
 }
@@ -103,5 +108,4 @@ void Button::update(const sf::Vector2f mosPos)
 void Button::render(sf::RenderTarget* target)
 {
 	target->draw(this->sprite);
-	//target->draw(this->hitBox);
 }

@@ -27,7 +27,6 @@ GSBorderTileSet::GSBorderTileSet(sf::RenderWindow* window, sf::Texture* texture,
 GSBorderTileSet::~GSBorderTileSet()
 {
 	delete this->sprite;
-	delete this->texture;
 }
 
 void GSBorderTileSet::updateSize(float prevWidth, float prevHeight)

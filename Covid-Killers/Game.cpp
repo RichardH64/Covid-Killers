@@ -118,7 +118,6 @@ void Game::updateBools()
     default:
         break;
     }
-
     switch (*this->booleans["RetryGameState"])
     {
     case true:
@@ -141,7 +140,6 @@ void Game::updateBools()
     default:
         break;
     }
-
 }
 
 void Game::updateStates()

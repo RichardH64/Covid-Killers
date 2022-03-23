@@ -86,7 +86,7 @@ void TitleState::update(const float& dt)
 {
 	for (int i = 0; i < this->buttons.size(); i++)
 	{
-		this->buttons[i]->update(*this->mosPosView);
+		this->buttons[i]->update(dt, *this->mosPosView);
 	}
 }
 

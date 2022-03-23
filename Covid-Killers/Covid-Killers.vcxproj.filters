@@ -127,4 +127,9 @@
     <None Include="sfml-window-2.dll" />
     <None Include="sfml-window-d-2.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\Buttons\ButtonRetry.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

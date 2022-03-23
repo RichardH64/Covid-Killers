@@ -10,22 +10,27 @@ class Button
 private:
 
 protected:
+	sf::Time lastClicked;
+	static const sf::Time lastClickedMax;
+
 	float xPos, yPos, width, height, scaleX, scaleY, unfilteredXPos, unfilteredYPos;
 
 	buttonStates buttonState;
 
-	bool pressed, hover, boolean;
+	bool boolean, active;
 	bool* condition;
 
 	sf::RenderWindow* window;
-	sf::RectangleShape hitBox;
 	sf::Sprite sprite;
 public:
 	Button(sf::RenderWindow* window, sf::Texture* texture, bool* condition, bool boolean, float xPos, float yPos);
 	virtual ~Button();
 
 	void onClick();
-	void update(const sf::Vector2f mosPos);
+	void setActive();
+	void setUnactive();
+	void updateTimers(const float& dt);
+	void update(const float& dt, const sf::Vector2f mosPos);
 	void render(sf::RenderTarget* target);
 };
 

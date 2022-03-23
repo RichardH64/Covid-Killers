@@ -124,18 +124,21 @@ GameState::GameState(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::V
 	}
 	//---Init Timers---//
 
+	//===Init Level Banner===//
 	this->levelBanner.setTexture(*this->textureLevel[this->currentLevel]);
-	this->levelBanner.setPosition(this->window->getSize().x / 2.f - this->levelBanner.getGlobalBounds().width / 2.f, 0.f);
+	this->levelBanner.setPosition(this->window->getSize().x / 2.f - this->levelBanner.getGlobalBounds().width / 2.f, 12.5f * (static_cast<float>(this->window->getSize().y) / 720.f));
+	//---Init Level Banner---//
 }
 
 GameState::~GameState()
 {
-	// Delete All The Buttons
+	//===Delete Buttons===//
 	for (auto& i : this->buttons)
 	{
 		delete i;
 	}
 	this->buttons.clear();
+	//---Delete Buttons---//
 
 	//===Delete GUI===//
 	for (int i = 0; i < 2; i++)
@@ -143,20 +146,18 @@ GameState::~GameState()
 		delete this->backgrounds[i];
 	}
 
-	//delete this->border;
+	delete this->border;
 	//---Delete GUI---//
 
-
+	//===Delete Entities===//
 	for (auto& i : this->enemies)
 	{
 		delete i;
 	}
 	this->enemies.clear();
 
-	//===Delete Entities===//
 	delete this->player;
 	//---Delete Entities---//
-
 
 	//===Delete Textures===//
 	delete this->textureBackground;
