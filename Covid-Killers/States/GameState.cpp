@@ -185,11 +185,11 @@ EnemyType GameState::randomEnemy()
 {
 	switch (rand() % 3)
 	{
-	case 1:
+	case 0:
 		return EnemyType::SARS;	
-	case 2:
+	case 1:
 		return EnemyType::DELTA;
-	case 3:
+	case 2:
 		return EnemyType::OMI;
 	default:
 		return EnemyType::SARS;

@@ -12,11 +12,11 @@ Enemy::Enemy(sf::RenderWindow* window, sf::Texture* texture, Level level, float 
 		switch (this->level)
 		{
 		case Level::ONE:
-			this->speed = 0.275f; // START
+			this->speed = 0.25f; // START
 			this->score = rand() % 249 + 170; // Min 170 Max 418
 			break;
 		case Level::TWO:
-			this->speed = 0.30f; // .275 + .075
+			this->speed = 0.35f; // .275 + .075
 			this->score = rand() % 209 + 350; // Min 350 Max 558
 			break;
 		case Level::THREE:
@@ -24,7 +24,7 @@ Enemy::Enemy(sf::RenderWindow* window, sf::Texture* texture, Level level, float 
 			this->score = rand() % 339 + 420; // Min 420 Max 758
 			break;
 		case Level::FOUR:
-			this->speed = 0.75f; // .45 + .30
+			this->speed = 0.55f;
 			this->score = rand() % 319 + 630; // Min 630 Max 948
 			break;
 		case Level::FIVE:
@@ -37,7 +37,7 @@ Enemy::Enemy(sf::RenderWindow* window, sf::Texture* texture, Level level, float 
 		switch (this->level)
 		{
 		case Level::TWO:
-			this->speed = 0.70f;
+			this->speed = 0.75f;
 			this->score = rand() % 237 + 387; // Min 387 Max 623
 			break;
 		case Level::THREE:
@@ -45,7 +45,7 @@ Enemy::Enemy(sf::RenderWindow* window, sf::Texture* texture, Level level, float 
 			this->score = rand() % 497 + 537; // Min 537 Max 1033
 			break;
 		case Level::FOUR:
-			this->speed = 1.15f; // .85 + .30
+			this->speed = 0.95f; // .85 + .30
 			this->score = rand() % 557 + 897; // Min 897 Max 1453
 			break;
 		case Level::FIVE:
@@ -60,11 +60,11 @@ Enemy::Enemy(sf::RenderWindow* window, sf::Texture* texture, Level level, float 
 		switch (this->level)
 		{
 		case Level::THREE:
-			this->speed = 1.25f; // 1.25
+			this->speed = 1.15f; // 1.25
 			this->score = rand() % 613 + 1532; // Min 1532 Max 2144
 			break;
 		case Level::FOUR:
-			this->speed = 1.55f; // 1.25 + .30
+			this->speed = 1.25f; // 1.25 + .30
 			this->score = rand() % 753 + 1812; // Min 1812 Max 2564
 			break;
 		case Level::FIVE:
