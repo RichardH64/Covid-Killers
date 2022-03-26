@@ -218,7 +218,7 @@
     <Image Include="Assets\Entity\Blast\Single.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Assets\Entity\Player\cell.png">
+    <Image Include="Assets\Entity\Player\Cell.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

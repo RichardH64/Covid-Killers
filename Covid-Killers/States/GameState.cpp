@@ -15,14 +15,14 @@ void GameState::initTextures()
 
 	//===Init Player Texture===//
 	this->texturePlayer = new sf::Texture;
-	this->texturePlayer->loadFromFile("Assets/GameState/WBloodCell.png");
+	this->texturePlayer->loadFromFile("Assets/Entity/Player/Cell.png");
 	//---Init Player Texture---//
 	
 	//===Init Blast Texture===//
 	this->textureBlast[0] = new sf::Texture;
 	this->textureBlast[1] = new sf::Texture;
 
-	this->textureBlast[0]->loadFromFile("Assets/GameState/AntiBody.png");
+	this->textureBlast[0]->loadFromFile("Assets/Entity/Blast/Single.png");
 	//---Init Blast Texture---//
 
 	//===Init Strain Texture===//
@@ -30,9 +30,9 @@ void GameState::initTextures()
 	this->textureEnemy.insert({ EnemyType::DELTA, new sf::Texture });
 	this->textureEnemy.insert({ EnemyType::OMI, new sf::Texture });
 
-	this->textureEnemy[EnemyType::SARS]->loadFromFile("Assets/GameState/Sars.png");
-	this->textureEnemy[EnemyType::DELTA]->loadFromFile("Assets/GameState/Delta.png");
-	this->textureEnemy[EnemyType::OMI]->loadFromFile("Assets/GameState/Omi.png");
+	this->textureEnemy[EnemyType::SARS]->loadFromFile("Assets/Entity/Enemy/Sars.png");
+	this->textureEnemy[EnemyType::DELTA]->loadFromFile("Assets/Entity/Enemy/Delta.png");
+	this->textureEnemy[EnemyType::OMI]->loadFromFile("Assets/Entity/Enemy/Omi.png");
 	//---Init Strain Texture---//
 
 	//===Init Level Texture===//

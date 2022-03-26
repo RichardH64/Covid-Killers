@@ -214,7 +214,7 @@
     <Image Include="Assets\Entity\Enemy\Omi.png" />
     <Image Include="Assets\Entity\Enemy\Sars.png" />
     <Image Include="Assets\Entity\Enemy\Sigma.png" />
-    <Image Include="Assets\Entity\Player\cell.png" />
+    <Image Include="Assets\Entity\Player\Cell.png" />
     <Image Include="Assets\GameState\AntiBody.png" />
     <Image Include="Assets\GameState\Background.png" />
     <Image Include="Assets\GameState\Border.png" />
