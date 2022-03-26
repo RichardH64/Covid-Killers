@@ -26,13 +26,13 @@ void GameState::initTextures()
 	//---Init Blast Texture---//
 
 	//===Init Strain Texture===//
-	this->textureStrain[0] = new sf::Texture;
-	this->textureStrain[1] = new sf::Texture;
-	this->textureStrain[2] = new sf::Texture;
+	this->textureEnemy.insert({ EnemyType::SARS, new sf::Texture });
+	this->textureEnemy.insert({ EnemyType::DELTA, new sf::Texture });
+	this->textureEnemy.insert({ EnemyType::OMI, new sf::Texture });
 
-	this->textureStrain[0]->loadFromFile("Assets/GameState/Sars.png");
-	this->textureStrain[1]->loadFromFile("Assets/GameState/Delta.png");
-	this->textureStrain[2]->loadFromFile("Assets/GameState/Omi.png");
+	this->textureEnemy[EnemyType::SARS]->loadFromFile("Assets/GameState/Sars.png");
+	this->textureEnemy[EnemyType::DELTA]->loadFromFile("Assets/GameState/Delta.png");
+	this->textureEnemy[EnemyType::OMI]->loadFromFile("Assets/GameState/Omi.png");
 	//---Init Strain Texture---//
 
 	//===Init Level Texture===//
@@ -87,10 +87,10 @@ GameState::GameState(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::V
 	this->booleansGameOver.insert({ "QuitGameState", &this->quit });
 	//---Init Boolean (Maps)---//
 
-	this->currentLevel = Level::ONE;
+	this->level = Level::ONE;
 
-	this->player = new Player(this->window, this->texturePlayer, 0.f, 540.f, this->currentLevel);
-	this->enemies.push_back(new Enemy(this->window, this->textureStrain, static_cast<float>(rand() % (this->window->getSize().x + 1)), 0.f, EnemyType::SARS, this->currentLevel));
+	this->player = new Player(this->window, this->texturePlayer, this->level, 0.f, 540.f);
+	this->enemies.push_back(new Enemy(this->window, this->textureEnemy[EnemyType::SARS], this->level, static_cast<float>(rand() % (this->window->getSize().x + 1)), 0.f, EnemyType::SARS));
 
 	//===Init Timers===//
 	this->cooldownPauseCreationMax = sf::seconds(0.5f);
@@ -99,33 +99,31 @@ GameState::GameState(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::V
 	this->cooldownGameOver = sf::seconds(0.0f);
 	this->cooldownGameOverMax = sf::seconds(120.f);
 
-	switch (this->currentLevel)
+	switch (this->level)
 	{
 	case Level::ONE:
 		this->cooldownEnemySpawnMax = sf::seconds(2.75f);
-		this->cooldownEnemySpawn = this->cooldownEnemySpawnMax;
 		break;
 	case Level::TWO:
 		this->cooldownEnemySpawnMax = sf::seconds(2.5f);
-		this->cooldownEnemySpawn = this->cooldownEnemySpawnMax;
 		break;
 	case Level::THREE:
 		this->cooldownEnemySpawnMax = sf::seconds(2.25f);
-		this->cooldownEnemySpawn = this->cooldownEnemySpawnMax;
 		break;
 	case Level::FOUR:
 		this->cooldownEnemySpawnMax = sf::seconds(2.0f);
-		this->cooldownEnemySpawn = this->cooldownEnemySpawnMax;
 		break;
 	case Level::FIVE:
 		this->cooldownGameOver = sf::seconds(0.0f);
 		this->cooldownGameOverMax = sf::seconds(300.f);
 		break;
 	}
+
+	this->cooldownEnemySpawn = this->cooldownEnemySpawnMax;
 	//---Init Timers---//
 
 	//===Init Level Banner===//
-	this->levelBanner.setTexture(*this->textureLevel[this->currentLevel]);
+	this->levelBanner.setTexture(*this->textureLevel[this->level]);
 	this->levelBanner.setPosition(this->window->getSize().x / 2.f - this->levelBanner.getGlobalBounds().width / 2.f, 12.5f * (static_cast<float>(this->window->getSize().y) / 720.f));
 	//---Init Level Banner---//
 }
@@ -165,8 +163,9 @@ GameState::~GameState()
 
 	delete this->texturePlayer;
 	for (int i = 0; i < 2; i++) { delete this->textureBlast[i]; }
-	for (int i = 0; i < 3; i++) { delete this->textureStrain[i]; }
 	//for (int i = 0; i < 3; i++){}
+	// 
+	// 	   Delete textureEnemy
 	//---Delete Textures===//
 }
 
@@ -182,55 +181,60 @@ void GameState::resetButton()
 {
 }
 
+EnemyType GameState::randomEnemy()
+{
+	switch (rand() % 3)
+	{
+	case 1:
+		return EnemyType::SARS;	
+	case 2:
+		return EnemyType::DELTA;
+	case 3:
+		return EnemyType::OMI;
+	default:
+		return EnemyType::SARS;
+	}
+}
+
 //void flashLevel
 
 void GameState::updateLevel()
 {
-	switch (this->currentLevel)
+	switch (this->level)
 	{
 	case Level::ONE:
 		if (this->player->getKills() >= 5 && this->player->getScore() >= 2500)
 		{
-			this->currentLevel = Level::TWO;
+			this->level = Level::TWO;
 			
 			this->player->updateLevel();
-			this->enemies.push_back(new Enemy(this->window, this->textureStrain, static_cast<float>(rand() % (this->window->getSize().x + 1)), 0.f, EnemyType::DELTA, this->currentLevel));
-			
-			this->levelBanner.setTexture(*this->textureLevel[this->currentLevel]);
-			this->cooldownGameOver = sf::seconds(0.f);
+			this->enemies.push_back(new Enemy(this->window, this->textureEnemy[EnemyType::DELTA], this->level, static_cast<float>(rand() % (this->window->getSize().x + 1)), 0.f, EnemyType::DELTA));
 
 			this->cooldownEnemySpawnMax = sf::seconds(2.5f);
-			this->cooldownEnemySpawn = this->cooldownEnemySpawnMax;
 		}
 		break;
 	case Level::TWO:
 		if (this->player->getKills() >= 15 && this->player->getScore() >= 7500)
 		{
-			this->currentLevel = Level::THREE;
+			this->level = Level::THREE;
 			
 			this->player->updateLevel();
-			this->enemies.push_back(new Enemy(this->window, this->textureStrain, static_cast<float>(rand() % (this->window->getSize().x + 1)), 0.f, EnemyType::OMI, this->currentLevel));
-			
-			this->levelBanner.setTexture(*this->textureLevel[this->currentLevel]);
-			this->cooldownGameOver = sf::seconds(0.f);
+			this->enemies.push_back(new Enemy(this->window, this->textureEnemy[EnemyType::OMI], this->level, static_cast<float>(rand() % (this->window->getSize().x + 1)), 0.f, EnemyType::OMI));	
 
 			this->cooldownEnemySpawnMax = sf::seconds(2.25f);
-			this->cooldownEnemySpawn = this->cooldownEnemySpawnMax;
 		}
 		break;
 	case Level::THREE:
 		if (this->player->getKills() >= 30  && this->player->getScore() >= 17500)
 		{
-			this->currentLevel = Level::FOUR;
+			this->level = Level::FOUR;
 			
 			this->player->updateLevel();
-			this->enemies.push_back(new Enemy(this->window, this->textureStrain, static_cast<float>(rand() % (this->window->getSize().x + 1)), 0.f, EnemyType::DEFAULT, this->currentLevel));
+			EnemyType ran;
+			ran = this->randomEnemy();
+			this->enemies.push_back(new Enemy(this->window, this->textureEnemy[ran], this->level, static_cast<float>(rand() % (this->window->getSize().x + 1)), 0.f, ran));
 			
-			this->levelBanner.setTexture(*this->textureLevel[this->currentLevel]);
-			this->cooldownGameOver = sf::seconds(0.f);
-
 			this->cooldownEnemySpawnMax = sf::seconds(2.0f);
-			this->cooldownEnemySpawn = this->cooldownEnemySpawnMax;
 		}
 		break;
 	case Level::FOUR:
@@ -238,6 +242,10 @@ void GameState::updateLevel()
 	case Level::FIVE:
 		break;
 	}
+
+	this->levelBanner.setTexture(*this->textureLevel[this->level]);
+	this->cooldownGameOver = sf::seconds(0.f);
+	this->cooldownEnemySpawn = this->cooldownEnemySpawnMax;
 }
 
 void GameState::updateTimers(const float& dt)
@@ -251,7 +259,7 @@ void GameState::updateBlast(const float& dt)
 {
 	if(this->player->getSpacePressed())
 	{
-		this->blasts.push_back(new Blast(this->window, this->textureBlast[0], this->player->getHitBox().getPosition().x * 2.f + this->player->getHitBox().getGlobalBounds().width, this->player->getHitBox().getPosition().y, this->currentLevel));
+		this->blasts.push_back(new Blast(this->window, this->textureBlast[0], this->level, this->player->getSprite().getPosition().x * 2.f + this->player->getSprite().getGlobalBounds().width, this->player->getSprite().getPosition().y));
 		this->player->resetSpacePressed();
 	}
 
@@ -274,12 +282,12 @@ void GameState::updateEnemies(const float& dt)
 	//Enemy Spawner
 	if (this->enemies.size() < 3)
 	{
-		switch (currentLevel)
+		switch (this->level)
 		{
 		case Level::ONE:
 			if (this->enemies.size() < 1)
 			{
-				this->enemies.push_back(new Enemy(this->window, this->textureStrain, static_cast<float>(rand() % (this->window->getSize().x + 1)), 0.f, EnemyType::SARS, this->currentLevel));
+				this->enemies.push_back(new Enemy(this->window, this->textureEnemy[EnemyType::SARS], this->level, static_cast<float>(rand() % (this->window->getSize().x + 1)), 0.f, EnemyType::SARS));
 			}
 			break;
 		case Level::TWO: 
@@ -289,11 +297,11 @@ void GameState::updateEnemies(const float& dt)
 				switch (this->enemies.back()->getType())
 				{
 				case EnemyType::SARS:
-					this->enemies.push_back(new Enemy(this->window, this->textureStrain, static_cast<float>(rand() % (this->window->getSize().x + 1)), 0.f, EnemyType::DELTA, this->currentLevel));
+					this->enemies.push_back(new Enemy(this->window, this->textureEnemy[EnemyType::DELTA], this->level, static_cast<float>(rand() % (this->window->getSize().x + 1)), 0.f, EnemyType::DELTA));
 					break;
 				case EnemyType::DELTA:
 				default:
-					this->enemies.push_back(new Enemy(this->window, this->textureStrain, static_cast<float>(rand() % (this->window->getSize().x + 1)), 0.f, EnemyType::SARS, this->currentLevel));
+					this->enemies.push_back(new Enemy(this->window, this->textureEnemy[EnemyType::SARS], this->level, static_cast<float>(rand() % (this->window->getSize().x + 1)), 0.f, EnemyType::SARS));
 					break;
 				}
 			}
@@ -304,21 +312,22 @@ void GameState::updateEnemies(const float& dt)
 			switch (this->enemies.back()->getType())
 			{
 			case EnemyType::SARS:
-				this->enemies.push_back(new Enemy(this->window, this->textureStrain, static_cast<float>(rand() % (this->window->getSize().x + 1)), 0.f, EnemyType::DELTA, this->currentLevel));
+				this->enemies.push_back(new Enemy(this->window, this->textureEnemy[EnemyType::DELTA], this->level, static_cast<float>(rand() % (this->window->getSize().x + 1)), 0.f, EnemyType::DELTA));
 				break;
 			case EnemyType::DELTA:
-				this->enemies.push_back(new Enemy(this->window, this->textureStrain, static_cast<float>(rand() % (this->window->getSize().x + 1)), 0.f, EnemyType::OMI, this->currentLevel));
+				this->enemies.push_back(new Enemy(this->window, this->textureEnemy[EnemyType::OMI], this->level, static_cast<float>(rand() % (this->window->getSize().x + 1)), 0.f, EnemyType::OMI));
 				break;
 			case EnemyType::OMI:
 			default:
-				this->enemies.push_back(new Enemy(this->window, this->textureStrain, static_cast<float>(rand() % (this->window->getSize().x + 1)), 0.f, EnemyType::SARS, this->currentLevel));
+				this->enemies.push_back(new Enemy(this->window, this->textureEnemy[EnemyType::SARS], this->level, static_cast<float>(rand() % (this->window->getSize().x + 1)), 0.f, EnemyType::SARS));
 				break;
 			}
 			break;
 		}
 		case Level::FOUR:
-			this->enemies.push_back(new Enemy(this->window, this->textureStrain, static_cast<float>(rand() % (this->window->getSize().x + 1)), 0.f, EnemyType::DEFAULT, this->currentLevel));
-			break;
+			EnemyType ran;
+			ran = this->randomEnemy();
+			this->enemies.push_back(new Enemy(this->window, this->textureEnemy[ran], this->level, static_cast<float>(rand() % (this->window->getSize().x + 1)), 0.f, ran));			break;
 		case Level::FIVE:
 			break;
 		}

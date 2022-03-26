@@ -14,18 +14,18 @@ protected:
 	bool deleted;
 
 	sf::RenderWindow* window;
-	sf::RectangleShape hitBox;
 	sf::Texture* texture;
 	sf::Sprite sprite;
 public:
+	Entity(sf::RenderWindow* window, sf::Texture* texture, Level level, float x, float y);
 	Entity(sf::RenderWindow* window, sf::Texture* texture, float x, float y);
 	Entity(sf::RenderWindow* window, sf::Texture* textures[], float x, float y);
 	virtual ~Entity();
 
 	const bool& getDeleted() const;
-	const sf::RectangleShape& getHitbox() const;
+	const sf::Sprite& getSprite() const;
 
-	void setDeleted(bool val);
+	void setDeleted();
 
 	virtual void updateCollision() = 0;
 	virtual void update(const float& dt) = 0;

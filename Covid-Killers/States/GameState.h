@@ -23,9 +23,10 @@ private:
 	sf::Texture* textureBorder;
 
 	sf::Texture* texturePlayer;
+	sf::Texture* textureBoss;
 	sf::Texture* textureBlast[2];
-	sf::Texture* textureStrain[3];
 
+	std::map<EnemyType, sf::Texture*> textureEnemy;
 	std::map<Level, sf::Texture*> textureLevel;
 	//---Textures---//
 
@@ -49,7 +50,7 @@ private:
 	//---Timers---//
 
 	std::stack<State*> stateStack;
-	Level currentLevel;
+	Level level;
 
 	void initTextures() override;
 	void initBackground();
@@ -63,6 +64,8 @@ public:
 	void confirmQuit() override;
 	void resetButton() override;
 	
+	EnemyType randomEnemy();
+
 	void updateLevel(); 
 	void updateTimers(const float& dt);
 	void updateGameOver(const float& dt);

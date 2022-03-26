@@ -12,7 +12,7 @@ private:
 	EnemyType type;
 	double health, damage;
 public:
-	Enemy(sf::RenderWindow* window, sf::Texture* textures[], float x, float y, EnemyType type = EnemyType::DEFAULT, Level level = Level::ONE);
+	Enemy(sf::RenderWindow* window, sf::Texture* texture, Level level, float x, float y, EnemyType type);
 	virtual ~Enemy();
 
 	const EnemyType& getType() const;
@@ -20,6 +20,33 @@ public:
 	const double& getDamage() const;
 
 	void setHealth(double health);
+
+	void updateBlastCollision(std::vector<Blast*> blasts, Player* player);
+	void updateBorderCollision(Player* player);
+	void updateCollision() override;
+	void update(const float& dt) override;
+
+	void render(sf::RenderTarget* target) override;
+};
+
+class Boss : public Entity
+{
+private:
+	int score;
+	double health, damage;
+public:
+	Boss(sf::RenderWindow* window, sf::Texture* texture, float x, float y);
+	virtual ~Boss();
+
+	const double& getHealth() const;
+	const double& getDamage() const;
+
+	void setHealth(double health);
+
+	void spawnMinion();
+
+	void shrink();
+	void enlarge();
 
 	void updateBlastCollision(std::vector<Blast*> blasts, Player* player);
 	void updateBorderCollision(Player* player);

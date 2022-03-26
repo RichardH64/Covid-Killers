@@ -21,11 +21,10 @@ private:
 	Bar* bars[3];
 
 public:
-	Player(sf::RenderWindow* window, sf::Texture* texture, float x, float y, Level level = Level::ONE);
+	Player(sf::RenderWindow* window, sf::Texture* texture, Level level, float x, float y);
 	virtual ~Player();
 
 	const bool& getSpacePressed() const;
-	const sf::RectangleShape& getHitBox() const;
 	const double& getHealth() const;
 	const int& getKills() const;
 	const int& getScore() const;

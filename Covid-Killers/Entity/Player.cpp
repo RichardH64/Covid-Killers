@@ -1,8 +1,7 @@
 #include "Player.h"
 
-Player::Player(sf::RenderWindow* window, sf::Texture* texture, float x, float y, Level level) : Entity(window, texture, x, y)
+Player::Player(sf::RenderWindow* window, sf::Texture* texture, Level level, float x, float y) : Entity(window, texture, level, x, y)
 {
-	this->level = level;
 	this->kills = 0;
 	this->score = 0;
 	this->isSprinting = false;
@@ -38,9 +37,9 @@ Player::Player(sf::RenderWindow* window, sf::Texture* texture, float x, float y,
 		this->cooldownSB = sf::seconds(0.45f);
 		this->cooldownSBMax = sf::seconds(0.45f);
 
-		this->hpMax = 262.5;this->hp = this->hpMax; // 350 - (350/4)
-		this->energyMax = 225;this->energy = this->energyMax;
-		this->staminaMax = 206.25;this->stamina = this->staminaMax;
+		this->hpMax = 262.5; this->hp = this->hpMax; // 350 - (350/4)
+		this->energyMax = 225; this->energy = this->energyMax;
+		this->staminaMax = 206.25; this->stamina = this->staminaMax;
 		break;
 	case Level::FOUR:
 		this->speed = 3.25f; // 2.95 + .30
@@ -72,11 +71,6 @@ Player::~Player()
 const bool& Player::getSpacePressed() const
 {
 	return this->spacePressed;
-}
-
-const sf::RectangleShape& Player::getHitBox() const
-{
-	return this->hitBox;
 }
 
 const double& Player::getHealth() const
@@ -178,14 +172,12 @@ void Player::updateMovement()
 	{
 		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) && this->stamina > 0.0 && (this->stamina > this->staminaDrain * 2.0 || this->isSprinting)) 
 		{ 	
-			this->hitBox.move(0.f, -(this->speed * 2.5f));
 			this->sprite.move(0.f, -(this->speed * 2.5f));
 			this->stamina -= this->staminaDrain; 
 			this->isSprinting = true; 
 		}
 		else 
 		{ 
-			this->hitBox.move(0.f, -this->speed);
 			this->sprite.move(0.f, -this->speed);
 			this->isSprinting = false; 
 		}
@@ -194,14 +186,12 @@ void Player::updateMovement()
 	{
 		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) && this->stamina > 0.0 && (this->stamina > this->staminaDrain * 2.0 || this->isSprinting))
 		{
-			this->hitBox.move(0.f, (this->speed * 2.5f));
 			this->sprite.move(0.f, (this->speed * 2.5f));
 			this->stamina -= this->staminaDrain;
 			this->isSprinting = true;
 		}
 		else
 		{
-			this->hitBox.move(0.f, this->speed);
 			this->sprite.move(0.f, this->speed);
 			this->isSprinting = false;
 		}
@@ -211,14 +201,12 @@ void Player::updateMovement()
 	{
 		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) && this->stamina > 0.0 && (this->stamina > this->staminaDrain * 2.0 || this->isSprinting))
 		{
-			this->hitBox.move(-(this->speed * 2.5f), 0.f);
 			this->sprite.move(-(this->speed * 2.5f), 0.f);
 			this->stamina -= this->staminaDrain;
 			this->isSprinting = true;
 		}
 		else
 		{
-			this->hitBox.move(-this->speed, 0.f);
 			this->sprite.move(-this->speed, 0.f);
 			this->isSprinting = false;
 		}
@@ -227,14 +215,12 @@ void Player::updateMovement()
 	{
 		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) && this->stamina > 0.0 && (this->stamina > this->staminaDrain * 2.0 || this->isSprinting))
 		{
-			this->hitBox.move((this->speed * 2.5f), 0.f);
 			this->sprite.move((this->speed * 2.5f), 0.f);
 			this->stamina -= this->staminaDrain;
 			this->isSprinting = true;
 		}
 		else
 		{
-			this->hitBox.move(this->speed, 0.f);
 			this->sprite.move(this->speed, 0.f);
 			this->isSprinting = false;
 		}
@@ -263,29 +249,25 @@ void Player::updateInput()
 void Player::updateCollision()
 {
 	// Left Coll
-	if (this->hitBox.getGlobalBounds().left < 0.f)
+	if (this->sprite.getGlobalBounds().left < 0.f)
 	{
-		this->hitBox.setPosition(0.f, this->hitBox.getGlobalBounds().top);
-		this->sprite.setPosition(0.f, this->hitBox.getGlobalBounds().top);
+		this->sprite.setPosition(0.f, this->sprite.getGlobalBounds().top);
 	}
 	// Right Coll
-	else if (this->hitBox.getGlobalBounds().left + this->hitBox.getGlobalBounds().width > this->window->getSize().x)
+	else if (this->sprite.getGlobalBounds().left + this->sprite.getGlobalBounds().width > this->window->getSize().x)
 	{
-		this->hitBox.setPosition(this->window->getSize().x - this->hitBox.getGlobalBounds().width, this->hitBox.getGlobalBounds().top);
-		this->sprite.setPosition(this->window->getSize().x - this->hitBox.getGlobalBounds().width, this->hitBox.getGlobalBounds().top);
+		this->sprite.setPosition(this->window->getSize().x - this->sprite.getGlobalBounds().width, this->sprite.getGlobalBounds().top);
 	}
 
 	// Top Coll
-	if (this->hitBox.getGlobalBounds().top < 540.f * (static_cast<float>(this->window->getSize().y) / 720.f))
+	if (this->sprite.getGlobalBounds().top < 540.f * (static_cast<float>(this->window->getSize().y) / 720.f))
 	{
-		this->hitBox.setPosition(this->hitBox.getGlobalBounds().left, 540.f * (static_cast<float>(this->window->getSize().y) / 720.f));
-		this->sprite.setPosition(this->hitBox.getGlobalBounds().left, 540.f * (static_cast<float>(this->window->getSize().y) / 720.f));
+		this->sprite.setPosition(this->sprite.getGlobalBounds().left, 540.f * (static_cast<float>(this->window->getSize().y) / 720.f));
 	}
 	// Bottom Coll
-	else if (this->hitBox.getGlobalBounds().top + this->hitBox.getGlobalBounds().height >= this->window->getSize().y)
+	else if (this->sprite.getGlobalBounds().top + this->sprite.getGlobalBounds().height >= this->window->getSize().y)
 	{
-		this->hitBox.setPosition(this->hitBox.getGlobalBounds().left, this->window->getSize().y - this->hitBox.getGlobalBounds().height);
-		this->sprite.setPosition(this->hitBox.getGlobalBounds().left, this->window->getSize().y - this->hitBox.getGlobalBounds().height);
+		this->sprite.setPosition(this->sprite.getGlobalBounds().left, this->window->getSize().y - this->sprite.getGlobalBounds().height);
 	}
 }
 
@@ -357,7 +339,6 @@ void Player::update(const float& dt)
 void Player::render(sf::RenderTarget* target)
 {
 	target->draw(this->sprite);
-	target->draw(this->hitBox);
 
 	for (int i = 0; i < 3; i++)
 	{

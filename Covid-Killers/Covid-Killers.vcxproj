@@ -209,6 +209,12 @@
     <Image Include="Assets\Buttons\ButtonRetry.png" />
     <Image Include="Assets\Buttons\ButtonSettings.png" />
     <Image Include="Assets\Buttons\ButtonStart.png" />
+    <Image Include="Assets\Entity\Blast\Single.png" />
+    <Image Include="Assets\Entity\Enemy\Delta.png" />
+    <Image Include="Assets\Entity\Enemy\Omi.png" />
+    <Image Include="Assets\Entity\Enemy\Sars.png" />
+    <Image Include="Assets\Entity\Enemy\Sigma.png" />
+    <Image Include="Assets\Entity\Player\cell.png" />
     <Image Include="Assets\GameState\AntiBody.png" />
     <Image Include="Assets\GameState\Background.png" />
     <Image Include="Assets\GameState\Border.png" />

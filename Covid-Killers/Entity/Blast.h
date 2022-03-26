@@ -9,13 +9,12 @@ private:
 	double damage;
 	bool hit;
 public:
-	Blast(sf::RenderWindow* window, sf::Texture* texture, float x, float y, Level level = Level::ONE);
-	Blast(sf::RenderWindow* window, sf::Texture* textures[], float x, float y, Level level = Level::ONE);
+	Blast(sf::RenderWindow* window, sf::Texture* texture, Level level, float x, float y);
 	virtual ~Blast();
 
 	const double& getDamage() const;
 	
-	void setHit(bool val);
+	void setHit();
 
 	void updateCollision() override;
 	void update(const float& dt);

@@ -203,6 +203,24 @@
     <Image Include="Assets\GameState\WBloodCell.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Assets\Entity\Enemy\Delta.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Entity\Enemy\Omi.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Entity\Enemy\Sars.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Entity\Enemy\Sigma.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Entity\Blast\Single.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Entity\Player\cell.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Font Include="Assets\Fonts\BrassMonoComfortableRegular.otf" />
