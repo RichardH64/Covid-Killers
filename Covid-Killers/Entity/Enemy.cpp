@@ -1,5 +1,14 @@
 #include "Enemy.h"
 
+int Enemy::calcScore()
+{
+	if (static_cast<float>(this->sprite.getGlobalBounds().top) <= 100.f * (static_cast<float>(this->window->getSize().y) / 720.f))
+	{
+		return this->score * 3;
+	}
+	return this->score * (1 + this->sprite.getGlobalBounds().top / (540.f * (static_cast<float>(this->window->getSize().y) / 720.f)));
+}
+
 Enemy::Enemy(sf::RenderWindow* window, sf::Texture* texture, Level level, float x, float y, EnemyType type) : Entity(window, texture, level, x, y)
 {
 	this->type = type;
@@ -12,23 +21,14 @@ Enemy::Enemy(sf::RenderWindow* window, sf::Texture* texture, Level level, float 
 		switch (this->level)
 		{
 		case Level::ONE:
-			this->speed = 0.25f; // START
-			this->score = rand() % 249 + 170; // Min 170 Max 418
-			break;
+			this->speed = 0.25f; this->score = 300; break;
 		case Level::TWO:
-			this->speed = 0.35f; // .275 + .075
-			this->score = rand() % 209 + 350; // Min 350 Max 558
-			break;
+			this->speed = 0.35f; this->score = 450; break;
 		case Level::THREE:
-			this->speed = 0.45f; // .30 +  .15
-			this->score = rand() % 339 + 420; // Min 420 Max 758
-			break;
+			this->speed = 0.45f; this->score = 600; break;
 		case Level::FOUR:
-			this->speed = 0.55f;
-			this->score = rand() % 319 + 630; // Min 630 Max 948
-			break;
 		case Level::FIVE:
-			break;
+			this->speed = 0.55f; this->score = 750; break;
 		}
 		break;
 	case EnemyType::DELTA:
@@ -37,19 +37,12 @@ Enemy::Enemy(sf::RenderWindow* window, sf::Texture* texture, Level level, float 
 		switch (this->level)
 		{
 		case Level::TWO:
-			this->speed = 0.75f;
-			this->score = rand() % 237 + 387; // Min 387 Max 623
-			break;
+			this->speed = 0.75f; this->score = 600; break;
 		case Level::THREE:
-			this->speed = 0.85f; // .70 + .15
-			this->score = rand() % 497 + 537; // Min 537 Max 1033
-			break;
+			this->speed = 0.85f; this->score = 800; break;
 		case Level::FOUR:
-			this->speed = 0.95f; // .85 + .30
-			this->score = rand() % 557 + 897; // Min 897 Max 1453
-			break;
 		case Level::FIVE:
-			break;
+			this->speed = 0.95f; this->score = 1000; break;
 		default:
 			break;
 		}
@@ -60,15 +53,10 @@ Enemy::Enemy(sf::RenderWindow* window, sf::Texture* texture, Level level, float 
 		switch (this->level)
 		{
 		case Level::THREE:
-			this->speed = 1.15f; // 1.25
-			this->score = rand() % 613 + 1532; // Min 1532 Max 2144
-			break;
+			this->speed = 1.15f; this->score = 1250; break;
 		case Level::FOUR:
-			this->speed = 1.25f; // 1.25 + .30
-			this->score = rand() % 753 + 1812; // Min 1812 Max 2564
-			break;
 		case Level::FIVE:
-			break;
+			this->speed = 1.25f; this->score = 1500; break;
 		default:
 			break;
 		}
@@ -114,7 +102,7 @@ void Enemy::updateBlastCollision(std::vector<Blast*> blasts, Player* player)
 			if (this->health <= 0)
 			{
 				player->addKill();
-				player->addScore(this->score);
+				player->addScore(this->calcScore());
 				this->deleted = true;
 				break;
 			}

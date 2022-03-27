@@ -3,6 +3,8 @@
 
 #include "Entity.h"
 
+enum class BlastType { DEFAULT = 0, SINGLE, BOMB, MULTI, LAZER };
+
 class Blast : public Entity
 {
 private:

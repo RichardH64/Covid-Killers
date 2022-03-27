@@ -11,6 +11,8 @@ private:
 	int score;
 	EnemyType type;
 	double health, damage;
+
+	int calcScore();
 public:
 	Enemy(sf::RenderWindow* window, sf::Texture* texture, Level level, float x, float y, EnemyType type);
 	virtual ~Enemy();
@@ -35,7 +37,7 @@ private:
 	int score;
 	double health, damage;
 public:
-	Boss(sf::RenderWindow* window, sf::Texture* texture, float x, float y);
+	Boss(sf::RenderWindow* window, sf::Texture* texture, Level level, float x, float y);
 	virtual ~Boss();
 
 	const double& getHealth() const;

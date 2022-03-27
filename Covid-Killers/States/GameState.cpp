@@ -18,11 +18,15 @@ void GameState::initTextures()
 	this->texturePlayer->loadFromFile("Assets/Entity/Player/Cell.png");
 	//---Init Player Texture---//
 	
+	//===Init Boss Texture===//
+	this->textureBoss = new sf::Texture;
+	this->textureBoss->loadFromFile("Assets/Entity/Enemy/Sigma.png");
+	//---Init Boss Texture---//
+	
 	//===Init Blast Texture===//
-	this->textureBlast[0] = new sf::Texture;
-	this->textureBlast[1] = new sf::Texture;
+	this->textureBlast.insert({ BlastType::SINGLE, new sf::Texture });
 
-	this->textureBlast[0]->loadFromFile("Assets/Entity/Blast/Single.png");
+	this->textureBlast[BlastType::SINGLE]->loadFromFile("Assets/Entity/Blast/Single.png");
 	//---Init Blast Texture---//
 
 	//===Init Strain Texture===//
@@ -79,6 +83,7 @@ GameState::GameState(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::V
 	this->pause = false;
 	this->restart = false;
 	this->gameOver = false;
+	this->renderBanner = true;
 
 	this->booleansPause.insert({ "PauseGameState", &this->pause });
 	this->booleansPause.insert({ "QuitGameState", &this->quit });
@@ -120,6 +125,10 @@ GameState::GameState(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::V
 	}
 
 	this->cooldownEnemySpawn = this->cooldownEnemySpawnMax;
+
+	this->cooldownLevelHideMax = sf::seconds(0.3f);
+	this->cooldownLevelStayMax = sf::seconds(0.3f);
+	this->cooldownLevelFullMax = this->cooldownLevelHideMax + this->cooldownLevelStayMax;
 	//---Init Timers---//
 
 	//===Init Level Banner===//
@@ -130,20 +139,11 @@ GameState::GameState(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::V
 
 GameState::~GameState()
 {
-	//===Delete Buttons===//
-	for (auto& i : this->buttons)
-	{
-		delete i;
-	}
-	this->buttons.clear();
-	//---Delete Buttons---//
-
 	//===Delete GUI===//
 	for (int i = 0; i < 2; i++)
 	{
 		delete this->backgrounds[i];
 	}
-
 	delete this->border;
 	//---Delete GUI---//
 
@@ -160,12 +160,23 @@ GameState::~GameState()
 	//===Delete Textures===//
 	delete this->textureBackground;
 	delete this->textureBorder;
-
 	delete this->texturePlayer;
-	for (int i = 0; i < 2; i++) { delete this->textureBlast[i]; }
-	//for (int i = 0; i < 3; i++){}
-	// 
-	// 	   Delete textureEnemy
+	delete this->textureBoss;
+
+	delete this->textureBlast[BlastType::SINGLE];
+	this->textureBlast.clear();
+
+	delete this->textureEnemy[EnemyType::SARS];
+	delete this->textureEnemy[EnemyType::DELTA];
+	delete this->textureEnemy[EnemyType::OMI];
+	this->textureEnemy.clear();
+
+	delete this->textureLevel[Level::ONE];
+	delete this->textureLevel[Level::TWO];
+	delete this->textureLevel[Level::THREE];
+	delete this->textureLevel[Level::FOUR];
+	delete this->textureLevel[Level::FIVE];
+	this->textureLevel.clear();
 	//---Delete Textures===//
 }
 
@@ -196,38 +207,53 @@ EnemyType GameState::randomEnemy()
 	}
 }
 
-//void flashLevel
-
 void GameState::updateLevel()
 {
 	switch (this->level)
 	{
 	case Level::ONE:
-		if (this->player->getKills() >= 5 && this->player->getScore() >= 2500)
+		if (this->player->getScore() >= 2500)
 		{
 			this->level = Level::TWO;
+			this->levelBanner.setTexture(*this->textureLevel[this->level]);
 			
 			this->player->updateLevel();
 			this->enemies.push_back(new Enemy(this->window, this->textureEnemy[EnemyType::DELTA], this->level, static_cast<float>(rand() % (this->window->getSize().x + 1)), 0.f, EnemyType::DELTA));
 
 			this->cooldownEnemySpawnMax = sf::seconds(2.5f);
+			this->cooldownEnemySpawn = this->cooldownEnemySpawnMax;
+			this->cooldownGameOver = sf::seconds(0.f);
+
+			this->cooldownLevelStay = sf::seconds(0.f);
+			this->cooldownLevelHide = sf::seconds(0.f);
+			this->cooldownLevelFull = sf::seconds(0.f);
+			this->levelFlashCount = 0;
 		}
 		break;
 	case Level::TWO:
-		if (this->player->getKills() >= 15 && this->player->getScore() >= 7500)
+		if (this->player->getScore() >= 7500)
 		{
 			this->level = Level::THREE;
+			this->levelBanner.setTexture(*this->textureLevel[this->level]);
 			
 			this->player->updateLevel();
 			this->enemies.push_back(new Enemy(this->window, this->textureEnemy[EnemyType::OMI], this->level, static_cast<float>(rand() % (this->window->getSize().x + 1)), 0.f, EnemyType::OMI));	
 
 			this->cooldownEnemySpawnMax = sf::seconds(2.25f);
+			this->cooldownEnemySpawn = this->cooldownEnemySpawnMax;
+			this->cooldownGameOver = sf::seconds(0.f);
+
+			this->cooldownLevelStay = sf::seconds(0.f);
+			this->cooldownLevelHide = sf::seconds(0.f);
+			this->cooldownLevelFull = sf::seconds(0.f);
+			this->levelFlashCount = 0;
 		}
 		break;
 	case Level::THREE:
-		if (this->player->getKills() >= 30  && this->player->getScore() >= 17500)
+		if (this->player->getScore() >= 17500)
 		{
 			this->level = Level::FOUR;
+			this->levelBanner.setTexture(*this->textureLevel[this->level]);
 			
 			this->player->updateLevel();
 			EnemyType ran;
@@ -235,17 +261,36 @@ void GameState::updateLevel()
 			this->enemies.push_back(new Enemy(this->window, this->textureEnemy[ran], this->level, static_cast<float>(rand() % (this->window->getSize().x + 1)), 0.f, ran));
 			
 			this->cooldownEnemySpawnMax = sf::seconds(2.0f);
+			this->cooldownEnemySpawn = this->cooldownEnemySpawnMax;
+			this->cooldownGameOver = sf::seconds(0.f);
+
+			this->cooldownLevelStay = sf::seconds(0.f);
+			this->cooldownLevelHide = sf::seconds(0.f);
+			this->cooldownLevelFull = sf::seconds(0.f);
+			this->levelFlashCount = 0;
 		}
 		break;
 	case Level::FOUR:
+		if (this->player->getScore() >= 40000)
+		{
+			this->level = Level::FIVE;
+			this->levelBanner.setTexture(*this->textureLevel[this->level]);
+
+			this->player->updateLevel();
+			//Spawn Boss
+
+			this->cooldownEnemySpawn = this->cooldownEnemySpawnMax;
+			this->cooldownGameOver = sf::seconds(0.f);
+
+			this->cooldownLevelStay = sf::seconds(0.f);
+			this->cooldownLevelHide = sf::seconds(0.f);
+			this->cooldownLevelFull = sf::seconds(0.f);
+			this->levelFlashCount = 0;
+		}
 		break;
 	case Level::FIVE:
 		break;
 	}
-
-	this->levelBanner.setTexture(*this->textureLevel[this->level]);
-	this->cooldownGameOver = sf::seconds(0.f);
-	this->cooldownEnemySpawn = this->cooldownEnemySpawnMax;
 }
 
 void GameState::updateTimers(const float& dt)
@@ -253,13 +298,24 @@ void GameState::updateTimers(const float& dt)
 	this->cooldownEnemySpawn += sf::seconds(dt);
 	this->cooldownPauseCreation += sf::seconds(dt);
 	this->cooldownGameOver += sf::seconds(dt);
+
+	if (this->renderBanner)
+	{ 
+		this->cooldownLevelStay += sf::seconds(dt);
+	}
+	else 
+	{
+		this->cooldownLevelHide += sf::seconds(dt);
+	}
+
+	this->cooldownLevelFull += sf::seconds(dt);
 }
 
 void GameState::updateBlast(const float& dt)
 {
 	if(this->player->getSpacePressed())
 	{
-		this->blasts.push_back(new Blast(this->window, this->textureBlast[0], this->level, this->player->getSprite().getPosition().x * 2.f + this->player->getSprite().getGlobalBounds().width, this->player->getSprite().getPosition().y));
+		this->blasts.push_back(new Blast(this->window, this->textureBlast[BlastType::SINGLE], this->level, this->player->getSprite().getPosition().x * 2.f + this->player->getSprite().getGlobalBounds().width, this->player->getSprite().getPosition().y));
 		this->player->resetSpacePressed();
 	}
 
@@ -453,6 +509,38 @@ void GameState::update(const float& dt)
 	//---Update GUI---//
 }
 
+void GameState::renderLevelBanner(sf::RenderTarget* target)
+{
+	if (this->levelFlashCount < 3)
+	{
+		if (this->cooldownLevelStay >= this->cooldownLevelStayMax) // If the banner has stayed long enough
+		{
+			this->renderBanner = false;
+			this->cooldownLevelStay = sf::seconds(0.f);
+		}
+		else if (this->cooldownLevelHide >= this->cooldownLevelHideMax) // If the banner has hid long enough
+		{
+			this->renderBanner = true;
+			this->cooldownLevelHide = sf::seconds(0.f);
+		}
+
+		if (this->renderBanner == true)
+		{
+			target->draw(this->levelBanner); 
+		}
+
+		if (this->cooldownLevelFull >= this->cooldownLevelFullMax)
+		{
+			this->levelFlashCount++;
+			this->cooldownLevelFull = sf::seconds(0.f);
+		}
+	}
+	else
+	{
+		target->draw(this->levelBanner);
+	}
+}
+
 void GameState::render(sf::RenderTarget* target)
 {
 	/*
@@ -483,7 +571,7 @@ void GameState::render(sf::RenderTarget* target)
 	}
 	//===Render Entities===//
 
-	target->draw(this->levelBanner);
+	this->renderLevelBanner(target);
 	this->border->render(target);
 
 	if (!this->stateStack.empty()) // As long as the stack is not empty, it will render the top
