@@ -6,7 +6,7 @@ int Enemy::calcScore()
 	{
 		return this->score * 3;
 	}
-	return this->score * (1 + this->sprite.getGlobalBounds().top / (540.f * (static_cast<float>(this->window->getSize().y) / 720.f)));
+	return static_cast<int>(this->score * (1 + this->sprite.getGlobalBounds().top / (540.f * (static_cast<float>(this->window->getSize().y) / 720.f))));
 }
 
 Enemy::Enemy(sf::RenderWindow* window, sf::Texture* texture, Level level, float x, float y, EnemyType type) : Entity(window, texture, level, x, y)
