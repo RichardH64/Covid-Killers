@@ -25,6 +25,7 @@ private:
 
 	//===Keybind (Map)===//
 	std::map<std::string, sf::Keyboard::Key> keybind;
+	std::map<std::string, int> supportedKeys;
 	std::map<std::string, bool> keybindPressed;
 	//---Keybind (Map)---//
 

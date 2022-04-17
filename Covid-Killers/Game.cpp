@@ -42,14 +42,22 @@ void Game::initBooleans()
 
 void Game::initKeys()
 {
-    this->keybind["Escape"] = sf::Keyboard::Key::Escape;
-    this->keybind["A"] = sf::Keyboard::Key::A;
-    this->keybind["D"] = sf::Keyboard::Key::D;
-    this->keybind["W"] = sf::Keyboard::Key::W;
-    this->keybind["S"] = sf::Keyboard::Key::S;
+    std::ifstream ifs("Config/supportedKeys.ini");
+
+    if (ifs.is_open())
+    {
+        std::string key = "";
+        int keyValue = 0;
+
+        while (ifs >> key >> keyValue)
+        {
+            this->supportedKeys[key] = keyValue;
+        }
+    }
+    ifs.close();
 
     // DEBUG REMOVE LATER
-    for (auto i : this->keybind)
+    for (auto i : this->supportedKeys)
     {
         std::cout << i.first << " " << i.second << "\n";
     }

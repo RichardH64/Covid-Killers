@@ -135,6 +135,8 @@
     <None Include="Assets\Fonts\connection-ii-font.zip" />
     <None Include="Assets\Fonts\misc\Connection II-1260.sfd" />
     <None Include="Setting\window.ini" />
+    <None Include="Config\supportedKeys.ini" />
+    <None Include="Config\keybinds.ini" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Buttons\ButtonRetry.png">
