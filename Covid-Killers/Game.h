@@ -23,6 +23,11 @@ private:
 	std::map<std::string, bool*> booleans;
 	//---Booleans (Map)---//
 
+	//===Keybind (Map)===//
+	std::map<std::string, sf::Keyboard::Key> keybind;
+	std::map<std::string, bool> keybindPressed;
+	//---Keybind (Map)---//
+
 	std::stack<State*> states;
 
 	//===MOUSE POSITION===//
@@ -33,6 +38,7 @@ private:
 	//===PRIVATE FUNCTIONS===//
 	void initWindow();
 	void initBooleans();
+	void initKeys();
 	void initStates();
 	//---PRIVATE FUNCTIONS---//
 public:

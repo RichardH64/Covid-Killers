@@ -40,6 +40,21 @@ void Game::initBooleans()
     *this->booleans["RetryGameState"] = false;
 }
 
+void Game::initKeys()
+{
+    this->keybind["Escape"] = sf::Keyboard::Key::Escape;
+    this->keybind["A"] = sf::Keyboard::Key::A;
+    this->keybind["D"] = sf::Keyboard::Key::D;
+    this->keybind["W"] = sf::Keyboard::Key::W;
+    this->keybind["S"] = sf::Keyboard::Key::S;
+
+    // DEBUG REMOVE LATER
+    for (auto i : this->keybind)
+    {
+        std::cout << i.first << " " << i.second << "\n";
+    }
+}
+
 void Game::initStates()
 {
     this->states.push(new TitleState(this->window, &this->mosPosWindow, &this->mosPosView, this->booleans));
@@ -52,6 +67,7 @@ Game::Game()
 {
     this->initWindow();
     this->initBooleans();
+    this->initKeys();
     this->initStates();
 }
 
