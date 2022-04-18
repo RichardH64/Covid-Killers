@@ -185,10 +185,10 @@
   <ItemGroup>
     <None Include="Assets\Fonts\connection-ii-font.zip" />
     <None Include="Assets\Fonts\misc\Connection II-1260.sfd" />
-    <None Include="Config\keybinds.ini" />
+    <None Include="Config\keyBinds.ini" />
     <None Include="Config\supportedKeys.ini" />
     <None Include="openal32.dll" />
-    <None Include="Setting\window.ini" />
+    <None Include="Config\window.ini" />
     <None Include="sfml-audio-2.dll" />
     <None Include="sfml-audio-d-2.dll" />
     <None Include="sfml-graphics-2.dll" />

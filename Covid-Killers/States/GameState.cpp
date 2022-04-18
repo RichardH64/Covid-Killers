@@ -70,7 +70,7 @@ void GameState::initButtons()
 }
 
 //---INITIALIZE FUNCTIONS---//
-GameState::GameState(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::Vector2f* mosPosView, std::map<std::string, bool*> booleans) : State(window, mosPosWindow, mosPosView, booleans)
+GameState::GameState(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::Vector2f* mosPosView, std::map<std::string, int>* keyBinds, std::map<std::string, bool>* keyBindPressed, std::map<std::string, bool*> booleans) : State(window, mosPosWindow, mosPosView, keyBinds, keyBindPressed, booleans)
 {
 	this->initTextures();
 	this->initBackground();
@@ -94,7 +94,7 @@ GameState::GameState(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::V
 
 	this->level = Level::ONE;
 
-	this->player = new Player(this->window, this->texturePlayer, this->level, 0.f, 540.f);
+	this->player = new Player(this->window, this->texturePlayer, this->level, 0.f, 540.f, this->keyBinds, this->keyBindPressed);
 	this->enemies.push_back(new Enemy(this->window, this->textureEnemy[EnemyType::SARS], this->level, static_cast<float>(rand() % (this->window->getSize().x + 1)), 0.f, EnemyType::SARS));
 
 	//===Init Timers===//
@@ -458,7 +458,7 @@ void GameState::update(const float& dt)
 
 	if ( (this->cooldownGameOver >= this->cooldownGameOverMax) || (this->player->getHealth() < 0.0) && (!this->gameOver))
 	{
-		this->stateStack.push(new GameOverState(this->window, this->mosPosWindow, this->mosPosView, this->booleansGameOver));
+		this->stateStack.push(new GameOverState(this->window, this->mosPosWindow, this->mosPosView, this->keyBinds, this->keyBindPressed, this->booleansGameOver));
 		this->player->updateBars();
 		this->player->updateBars();
 		this->player->updateBars();
@@ -467,7 +467,7 @@ void GameState::update(const float& dt)
 
 	if ((this->pause && !this->gameOver) && (this->stateStack.empty())) // Checks if the player has initiated pause AND the stack is already empty
 	{
-		this->stateStack.push(new PauseState(this->window, this->mosPosWindow, this->mosPosView, this->booleansPause));
+		this->stateStack.push(new PauseState(this->window, this->mosPosWindow, this->mosPosView, this->keyBinds, this->keyBindPressed, this->booleansPause));
 	}
 
 	if (!this->stateStack.empty()) // If the stack isn't empty, that state will be updated

@@ -3,7 +3,7 @@
 //===PRIVATE FUNCTIONS===//
 void Game::initWindow()
 {
-    std::ifstream ifs("Setting/window.ini");
+    std::ifstream ifs("Config/window.ini");
 
     std::string title = "None";
     sf::VideoMode window_bounds(1280, 720);
@@ -40,7 +40,7 @@ void Game::initBooleans()
     *this->booleans["RetryGameState"] = false;
 }
 
-void Game::initKeys()
+void Game::initSupportedKeys()
 {
     std::ifstream ifs("Config/supportedKeys.ini");
 
@@ -55,17 +55,46 @@ void Game::initKeys()
         }
     }
     ifs.close();
+}
+
+void Game::initKeyBinds()
+{
+    std::ifstream ifs("Config/keyBinds.ini");
+
+    if (ifs.is_open())
+    {
+        std::string keyOne = "";
+        std::string keyTwo = "";
+
+        while (ifs >> keyOne >> keyTwo)
+        {
+            this->keyBinds[keyOne] = this->supportedKeys.at(keyTwo);
+        }
+    }
+    ifs.close();
+
+    for (auto i : this->keyBinds)
+    {
+        this->keyBindPressed[i.first] = false;
+    }
 
     // DEBUG REMOVE LATER
-    for (auto i : this->supportedKeys)
+    /*
+    for (auto i : this->keyBinds)
     {
         std::cout << i.first << " " << i.second << "\n";
     }
+    
+    for (auto i : this->keyBindPressed)
+    {
+        std::cout << i.first << " " << i.second << "\n";
+    }
+    */
 }
 
 void Game::initStates()
 {
-    this->states.push(new TitleState(this->window, &this->mosPosWindow, &this->mosPosView, this->booleans));
+    this->states.push(new TitleState(this->window, &this->mosPosWindow, &this->mosPosView, &this->keyBinds, &this->keyBindPressed, this->booleans));
 }
 //---PRIVATE FUNCTIONS---//
 
@@ -75,7 +104,8 @@ Game::Game()
 {
     this->initWindow();
     this->initBooleans();
-    this->initKeys();
+    this->initSupportedKeys();
+    this->initKeyBinds();
     this->initStates();
 }
 
@@ -116,6 +146,26 @@ void Game::updateEvents()
         case sf::Event::Closed:
             this->window->close();
             break;
+        case sf::Event::KeyPressed:
+            for (auto i : this->keyBinds)
+            {
+                if (ev.key.code == sf::Keyboard::Key(this->keyBinds[i.first]))
+                {
+                    this->keyBindPressed[i.first] = true;
+                    break;
+                }
+            }
+            break;        
+        case sf::Event::KeyReleased:
+            for (auto i : this->keyBinds)
+            {
+                if (ev.key.code == sf::Keyboard::Key(this->keyBinds[i.first]))
+                {
+                    this->keyBindPressed[i.first] = false;
+                    break;
+                }
+            }
+            break;
         default:
             break;
         }
@@ -140,7 +190,7 @@ void Game::updateBools()
     {
     case true:
         this->states.top()->resetButton();
-        this->states.push(new GameState(this->window, &this->mosPosWindow, &this->mosPosView, this->booleans));
+        this->states.push(new GameState(this->window, &this->mosPosWindow, &this->mosPosView, &this->keyBinds, &this->keyBindPressed, this->booleans));
         *this->booleans["CreateGameState"] = false;
         break;
     default:
@@ -150,19 +200,10 @@ void Game::updateBools()
     {
     case true:
         this->states.top()->confirmQuit();
-        /*
-        if (this->states.top()->getQuit())
-        {
-            this->states.top()->endState();
-            delete this->states.top();
-            this->states.pop();
-            this->states.push(new GameState(this->window, &this->mosPosWindow, &this->mosPosView, this->booleans));
-        }
-        */
         this->states.top()->endState();
         delete this->states.top();
         this->states.pop();
-        this->states.push(new GameState(this->window, &this->mosPosWindow, &this->mosPosView, this->booleans));
+        this->states.push(new GameState(this->window, &this->mosPosWindow, &this->mosPosView, &this->keyBinds, &this->keyBindPressed, this->booleans));
         *this->booleans["RetryGameState"] = false;
         break;
     default:

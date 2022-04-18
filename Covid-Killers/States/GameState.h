@@ -61,7 +61,7 @@ private:
 	void initButtons() override;
 public:
 	//===CONSTRUCTORS||DESTRUCTORS===//
-	GameState(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::Vector2f* mosPosView, std::map<std::string, bool*> booleans);
+	GameState(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::Vector2f* mosPosView, std::map<std::string, int>* keyBinds, std::map<std::string, bool>* keyBindPressed, std::map<std::string, bool*> booleans);
 	virtual ~GameState();
 
 	void endState() override;

@@ -14,7 +14,7 @@ private:
 	void initTextures() override;
 	void initButtons() override;
 public:
-	PauseState(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::Vector2f* mosPosView, std::map<std::string, bool*> booleans);
+	PauseState(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::Vector2f* mosPosView, std::map<std::string, int>* keyBinds, std::map<std::string, bool>* keyBindPressed, std::map<std::string, bool*> booleans);
 	virtual ~PauseState();
 
 	void endState() override;

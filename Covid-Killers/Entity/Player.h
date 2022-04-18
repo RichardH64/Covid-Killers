@@ -17,11 +17,14 @@ private:
 	sf::Time cooldownEnergy, cooldownEnergyMax; // Cooldown Energy
 	sf::Time cooldownStamina, cooldownStaminaMax; // Cooldown Stamina
 
+	std::map<std::string, int>* keyBinds;
+	std::map<std::string, bool>* keyBindPressed;
+
 	bool isSprinting, isBlasting, spacePressed;
 	Bar* bars[3];
 
 public:
-	Player(sf::RenderWindow* window, sf::Texture* texture, Level level, float x, float y);
+	Player(sf::RenderWindow* window, sf::Texture* texture, Level level, float x, float y, std::map<std::string, int>* keyBinds, std::map<std::string, bool>* keyBindPressed);
 	virtual ~Player();
 
 	const bool& getSpacePressed() const;

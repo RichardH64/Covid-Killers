@@ -12,7 +12,7 @@ private:
 	void initTextures() override;
 	void initButtons() override;
 public:
-	GameOverState(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::Vector2f* mosPosView, std::map<std::string, bool*> booleans);
+	GameOverState(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::Vector2f* mosPosView, std::map<std::string, int>* keyBinds, std::map<std::string, bool>* keyBindPressed, std::map<std::string, bool*> booleans);
 	virtual ~GameOverState();
 
 	void endState() override;

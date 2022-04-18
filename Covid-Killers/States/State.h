@@ -17,6 +17,11 @@ protected:
 	float prevWidth, prevHeight;
 	std::map<std::string, bool*> booleans;
 
+	//===KeyBinds===//
+	std::map<std::string, int>* keyBinds;
+	std::map<std::string, bool>* keyBindPressed;
+	//---KeyBinds---//
+
 	//===Resources===//
 	std::vector<sf::Texture> textures;
 	std::vector<Button*> buttons;
@@ -28,8 +33,8 @@ protected:
 	virtual void initButtons() = 0;
 
 public:
-	State(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::Vector2f* mosPosView);
-	State(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::Vector2f* mosPosView, std::map<std::string, bool*> booleans);
+	State(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::Vector2f* mosPosView, std::map<std::string, int>* keyBinds, std::map<std::string, bool>* keyBindPressed);
+	State(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::Vector2f* mosPosView, std::map<std::string, int>* keyBinds, std::map<std::string, bool>* keyBindPressed, std::map<std::string, bool*> booleans);
 	virtual ~State();
 
 	const bool& getQuit() const;

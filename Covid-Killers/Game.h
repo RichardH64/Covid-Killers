@@ -24,9 +24,9 @@ private:
 	//---Booleans (Map)---//
 
 	//===Keybind (Map)===//
-	std::map<std::string, sf::Keyboard::Key> keybind;
 	std::map<std::string, int> supportedKeys;
-	std::map<std::string, bool> keybindPressed;
+	std::map<std::string, int> keyBinds;
+	std::map<std::string, bool> keyBindPressed;
 	//---Keybind (Map)---//
 
 	std::stack<State*> states;
@@ -39,7 +39,8 @@ private:
 	//===PRIVATE FUNCTIONS===//
 	void initWindow();
 	void initBooleans();
-	void initKeys();
+	void initSupportedKeys();
+	void initKeyBinds();
 	void initStates();
 	//---PRIVATE FUNCTIONS---//
 public:

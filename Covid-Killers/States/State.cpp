@@ -3,7 +3,7 @@
 //===ABSTRACT STATE===//
 
 
-State::State(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::Vector2f* mosPosView)
+State::State(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::Vector2f* mosPosView, std::map<std::string, int>* keyBinds, std::map<std::string, bool>* keyBindPressed)
 {
 	this->window = window;
 	this->quit = false;
@@ -13,9 +13,12 @@ State::State(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::Vector2f*
 	this->prevWidth = static_cast<float>(this->window->getSize().x);
 	this->prevHeight = static_cast<float>(this->window->getSize().y);
 	this->fontConnectionII.loadFromFile("Assets/Fonts/ConnectionIi-2wj8.otf");
+
+	this->keyBinds = keyBinds;
+	this->keyBindPressed = keyBindPressed;
 }
 
-State::State(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::Vector2f* mosPosView, std::map<std::string, bool*> booleans)
+State::State(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::Vector2f* mosPosView, std::map<std::string, int>* keyBinds, std::map<std::string, bool>* keyBindPressed, std::map<std::string, bool*> booleans)
 {
 	this->window = window;
 	this->quit = false;
@@ -25,6 +28,9 @@ State::State(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::Vector2f*
 	this->prevWidth = static_cast<float>(this->window->getSize().x);
 	this->prevHeight = static_cast<float>(this->window->getSize().y);
 	this->fontConnectionII.loadFromFile("Assets/Fonts/ConnectionIi-2wj8.otf");
+
+	this->keyBinds = keyBinds;
+	this->keyBindPressed = keyBindPressed;
 
 	this->booleans = booleans;
 }

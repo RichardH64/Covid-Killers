@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(sf::RenderWindow* window, sf::Texture* texture, Level level, float x, float y) : Entity(window, texture, level, x, y)
+Player::Player(sf::RenderWindow* window, sf::Texture* texture, Level level, float x, float y, std::map<std::string, int>* keyBinds, std::map<std::string, bool>* keyBindPressed) : Entity(window, texture, level, x, y)
 {
 	this->kills = 0;
 	this->score = 0;
