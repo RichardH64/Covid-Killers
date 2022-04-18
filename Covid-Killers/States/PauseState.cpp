@@ -76,7 +76,7 @@ void PauseState::resetButton()
 
 void PauseState::updateInput()
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+	if (this->keyBindPressed->at("PAUSE"))
 	{
 		if (this->cooldownCreation >= this->cooldownCreationMax)
 		{
