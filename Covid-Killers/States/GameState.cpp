@@ -415,7 +415,7 @@ void GameState::updateEnemies(const float& dt)
 
 void GameState::updateInput()
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+	if (this->keyBindPressed->at("PAUSE"))
 	{
 		if(this->cooldownPauseCreation >= this->cooldownPauseCreationMax)
 		{
