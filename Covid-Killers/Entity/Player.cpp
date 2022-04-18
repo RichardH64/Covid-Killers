@@ -9,6 +9,9 @@ Player::Player(sf::RenderWindow* window, sf::Texture* texture, Level level, floa
 	this->blastDrain = 2.475;
 	this->staminaDrain = .1;
 
+	this->keyBinds = keyBinds;
+	this->keyBindPressed = keyBindPressed;
+
 	this->cooldownEnergyMax = sf::seconds(0.70f); this->cooldownEnergy = this->cooldownEnergyMax;
 	this->cooldownStaminaMax = sf::seconds(0.10f); this->cooldownStamina = this->cooldownStaminaMax;
 
@@ -168,7 +171,7 @@ void Player::updateTimers(const float& dt)
 void Player::updateMovement()
 {
 	//Keyboard Input
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+	if (this->keyBindPressed->at("MOVE_UP"))
 	{
 		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) && this->stamina > 0.0 && (this->stamina > this->staminaDrain * 2.0 || this->isSprinting)) 
 		{ 	
@@ -182,7 +185,7 @@ void Player::updateMovement()
 			this->isSprinting = false; 
 		}
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+	else if (this->keyBindPressed->at("MOVE_DOWN"))
 	{
 		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) && this->stamina > 0.0 && (this->stamina > this->staminaDrain * 2.0 || this->isSprinting))
 		{
@@ -197,7 +200,7 @@ void Player::updateMovement()
 		}
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	if (this->keyBindPressed->at("MOVE_LEFT"))
 	{
 		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) && this->stamina > 0.0 && (this->stamina > this->staminaDrain * 2.0 || this->isSprinting))
 		{
@@ -211,7 +214,7 @@ void Player::updateMovement()
 			this->isSprinting = false;
 		}
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	else if (this->keyBindPressed->at("MOVE_RIGHT"))
 	{
 		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) && this->stamina > 0.0 && (this->stamina > this->staminaDrain * 2.0 || this->isSprinting))
 		{
@@ -229,7 +232,7 @@ void Player::updateMovement()
 
 void Player::updateBlast()
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && this->energy > 0)
+	if (this->keyBindPressed->at("SINGLE_BLAST") && this->energy > 0)
 	{
 		if (this->cooldownSB >= this->cooldownSBMax)
 		{
