@@ -17,10 +17,12 @@ void TitleState::initTextures()
 	this->textureButton["Quit"]->loadFromFile("Assets/Buttons/ButtonQuit.png");
 	//---Init Button Textures---//
 
+	//===Init Background Texture===//
 	this->textureBackground = new sf::Texture;
-	this->textureBackground->loadFromFile("Assets/GameState/Background.png");
+	this->textureBackground->loadFromFile("Assets/Tiles/Background.png");
+	//---Init Background Texture---//
 
-	this->background = new GSTileSet(this->window, this->textureBackground, 0.f);
+	this->background = new Tile(this->window, this->textureBackground, 0.f, 0.f);
 
 	this->textTitle.setFont(this->fontConnectionII);
 	this->textTitle.setCharacterSize(128);
@@ -60,6 +62,8 @@ TitleState::~TitleState()
 		delete i;
 	}
 	this->buttons.clear();
+
+	delete this->background;
 
 	delete this->textureBackground;
 	delete this->textureButton["Start"];

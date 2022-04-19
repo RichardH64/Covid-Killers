@@ -153,6 +153,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GUI\GUI.cpp" />
     <ClCompile Include="GUI\Stats.cpp" />
+    <ClCompile Include="Physics.cpp" />
     <ClCompile Include="States\GameOverState.cpp" />
     <ClCompile Include="GUI\Bar.cpp" />
     <ClCompile Include="main.cpp" />
@@ -160,8 +161,8 @@
     <ClCompile Include="States\PauseState.cpp" />
     <ClCompile Include="States\State.cpp" />
     <ClCompile Include="States\TitleState.cpp" />
-    <ClCompile Include="TileSets\GSBorderTileSet.cpp" />
-    <ClCompile Include="TileSets\GSTileSet.cpp" />
+    <ClCompile Include="TileSets\TileMoving.cpp" />
+    <ClCompile Include="TileSets\Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Buttons\Button.h" />
@@ -172,6 +173,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GUI\GUI.h" />
     <ClInclude Include="GUI\Stats.h" />
+    <ClInclude Include="Physics.h" />
     <ClInclude Include="States\GameOverState.h" />
     <ClInclude Include="GUI\Bar.h" />
     <ClInclude Include="Includes.h" />
@@ -179,8 +181,8 @@
     <ClInclude Include="States\PauseState.h" />
     <ClInclude Include="States\State.h" />
     <ClInclude Include="States\TitleState.h" />
-    <ClInclude Include="TileSets\GSBorderTileSet.h" />
-    <ClInclude Include="TileSets\GSTileSet.h" />
+    <ClInclude Include="TileSets\TileMoving.h" />
+    <ClInclude Include="TileSets\Tile.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Fonts\connection-ii-font.zip" />

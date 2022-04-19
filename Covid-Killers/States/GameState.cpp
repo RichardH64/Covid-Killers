@@ -5,7 +5,7 @@ void GameState::initTextures()
 {
 	//===Init Background Texture===//
 	this->textureBackground = new sf::Texture;
-	this->textureBackground->loadFromFile("Assets/GameState/Background.png");
+	this->textureBackground->loadFromFile("Assets/Tiles/Background.png");
 	//---Init Background Texture---//
 
 	//===Init Border Texture===//
@@ -56,13 +56,13 @@ void GameState::initTextures()
 
 void GameState::initBackground()
 {
-	this->backgrounds[0] = new GSTileSet(this->window, this->textureBackground, -1.f * static_cast<float>(this->window->getSize().y));
-	this->backgrounds[1] = new GSTileSet(this->window, this->textureBackground, 0.f);
+	this->backgrounds[0] = new TileMoving(this->window, this->textureBackground, 0.f, -1.f * static_cast<float>(this->window->getSize().y), 150.f, sf::Vector2f(0.f, 1.f));
+	this->backgrounds[1] = new TileMoving(this->window, this->textureBackground, 0.f, 0.f, 150.f, sf::Vector2f(0.f, 1.f));
 
-	this->backgrounds[0]->setOtherTilePos(this->backgrounds[1]->getPosPtr());
-	this->backgrounds[1]->setOtherTilePos(this->backgrounds[0]->getPosPtr());
+	this->backgrounds[0]->setRelative(this->backgrounds[1]);
+	this->backgrounds[1]->setRelative(this->backgrounds[0]);
 
-	this->border = new GSBorderTileSet(this->window, this->textureBorder, 90.f * (static_cast<float>(this->window->getSize().y) / 720.f) * 6.f);
+	this->border = new Tile(this->window, this->textureBorder, 0.f, 90.f * (static_cast<float>(this->window->getSize().y) / 720.f) * 6.f);
 }
 
 void GameState::initButtons()
@@ -92,7 +92,7 @@ GameState::GameState(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::V
 	this->booleansGameOver.insert({ "QuitGameState", &this->quit });
 	//---Init Boolean (Maps)---//
 
-	this->level = Level::FOUR;
+	this->level = Level::ONE;
 
 	this->player = new Player(this->window, this->texturePlayer, this->level, 0.f, 540.f, this->keyBinds, this->keyBindPressed);
 	this->enemies.push_back(new Enemy(this->window, this->textureEnemy[EnemyType::SARS], this->level, static_cast<float>(rand() % (this->window->getSize().x + 1)), 0.f, EnemyType::SARS));

@@ -1,38 +1,5 @@
 #include "Entity.h"
 
-sf::Vector2f normalize(sf::Vector2f vector)
-{
-	constexpr auto units_in_last_place = 2;
-	auto norm = std::sqrt((vector.x * vector.x) + (vector.y * vector.y));
-
-	// Prevent division by zero
-	if (norm <= std::numeric_limits<float>::epsilon() * norm * units_in_last_place || norm < std::numeric_limits<float>::min())
-	{
-		return sf::Vector2f();
-	}
-	return vector / norm;
-}
-
-float percentRange(float number, float percent, unsigned loop)
-{
-	if (loop < 0) { loop = 0; }
-	for (int i = 0; i < loop; i++)
-	{
-		number += number * percent;
-	}
-	return number;
-}
-
-double percentRange(double number, double percent, unsigned loop)
-{
-	if (loop < 0) { loop = 0; }
-	for (int i = 0; i < loop; i++)
-	{
-		number += number * percent;
-	}
-	return number;
-}
-
 Entity::Entity(sf::RenderWindow* window, sf::Texture* texture, Level level, float x, float y)
 {
 	//===PRIMARY===//

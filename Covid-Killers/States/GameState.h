@@ -1,9 +1,7 @@
 #ifndef GAMESTATE_H
 #define GAMESTATE_H
 
-
-#include "../TileSets/GSTileSet.h"
-#include "../TileSets/GSBorderTileSet.h"
+#include "../TileSets/TileMoving.h"
 #include "../Entity/Enemy.h"
 #include "../Entity/Player.h"
 #include "PauseState.h"
@@ -16,8 +14,8 @@ private:
 	int levelFlashCount;
 	sf::Sprite levelBanner;
 
-	GSTileSet* backgrounds[2];
-	GSBorderTileSet* border;
+	TileMoving* backgrounds[2];
+	Tile* border;
 
 	//===Textures===//
 	sf::Texture* textureBackground;

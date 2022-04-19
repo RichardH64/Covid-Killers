@@ -2,11 +2,7 @@
 #define ENTITY_H
 
 #include "../Includes.h"
-#include <limits>
-
-sf::Vector2f normalize(sf::Vector2f vector);
-float percentRange(float number, float percent, unsigned loop = 1);
-double percentRange(double number, double percent, unsigned loop = 1);
+#include "../Physics.h"
 
 enum class Level { ONE = 1, TWO, THREE, FOUR, FIVE };
 

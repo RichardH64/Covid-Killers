@@ -3,7 +3,7 @@
 
 #include "State.h"
 #include "../Buttons/Button.h"
-#include "../TileSets/GSTileSet.h"
+#include "../TileSets/Tile.h"
 
 
 class TitleState : public State
@@ -14,7 +14,7 @@ private:
 	std::map<std::string, sf::Texture*> textureButton;
 	sf::Texture* textureBackground;
 
-	GSTileSet* background;
+	Tile* background;
 
 	void initTextures() override;
 	void initButtons() override;
