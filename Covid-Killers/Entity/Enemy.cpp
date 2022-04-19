@@ -12,37 +12,40 @@ int Enemy::calcScore()
 Enemy::Enemy(sf::RenderWindow* window, sf::Texture* texture, Level level, float x, float y, EnemyType type) : Entity(window, texture, level, x, y)
 {
 	this->type = type;
+	this->direction.y = 1.f;
 
 	switch (this->type)
 	{
 	case EnemyType::SARS:
 		this->health = 45.0;
 		this->damage = 15.0;
+		this->velocity = percentRange(50.f, .15f, static_cast<int>(this->level) - 1);
 		switch (this->level)
 		{
 		case Level::ONE:
-			this->speed = 0.25f; this->score = 300; break;
+			this->score = 300; break;
 		case Level::TWO:
-			this->speed = 0.35f; this->score = 450; break;
+			this->score = 450; break;
 		case Level::THREE:
-			this->speed = 0.45f; this->score = 600; break;
+			this->score = 600; break;
 		case Level::FOUR:
 		case Level::FIVE:
-			this->speed = 0.55f; this->score = 750; break;
+			this->score = 750; break;
 		}
 		break;
 	case EnemyType::DELTA:
 		this->health = 30.0;
 		this->damage = 8.75;
+		this->velocity = percentRange(90.f, .10f, static_cast<int>(this->level) - 2);
 		switch (this->level)
 		{
 		case Level::TWO:
-			this->speed = 0.75f; this->score = 600; break;
+			this->score = 600; break;
 		case Level::THREE:
-			this->speed = 0.85f; this->score = 800; break;
+			this->score = 800; break;
 		case Level::FOUR:
 		case Level::FIVE:
-			this->speed = 0.95f; this->score = 1000; break;
+			this->score = 1000; break;
 		default:
 			break;
 		}
@@ -50,13 +53,14 @@ Enemy::Enemy(sf::RenderWindow* window, sf::Texture* texture, Level level, float 
 	case EnemyType::OMI:
 		this->health = 15.0;
 		this->damage = 7.5;
+		this->velocity = percentRange(150.f, .05f, static_cast<int>(this->level) - 3);
 		switch (this->level)
 		{
 		case Level::THREE:
-			this->speed = 1.15f; this->score = 1250; break;
+			this->score = 1250; break;
 		case Level::FOUR:
 		case Level::FIVE:
-			this->speed = 1.25f; this->score = 1500; break;
+			this->score = 1500; break;
 		default:
 			break;
 		}
@@ -119,7 +123,6 @@ void Enemy::updateBorderCollision(Player* player)
 	}
 }
 
-
 void Enemy::updateCollision()
 {
 
@@ -127,8 +130,7 @@ void Enemy::updateCollision()
 
 void Enemy::update(const float& dt)
 {
-	//this->updateCollision();
-	this->sprite.move(0.f, this->speed);
+	this->sprite.move(normalize(this->direction) * this->velocity * dt);
 }
 
 void Enemy::render(sf::RenderTarget* target)

@@ -2,6 +2,11 @@
 #define ENTITY_H
 
 #include "../Includes.h"
+#include <limits>
+
+sf::Vector2f normalize(sf::Vector2f vector);
+float percentRange(float number, float percent, unsigned loop = 1);
+double percentRange(double number, double percent, unsigned loop = 1);
 
 enum class Level { ONE = 1, TWO, THREE, FOUR, FIVE };
 
@@ -12,6 +17,9 @@ protected:
 	float x, y, width, height, scaleX, scaleY;
 	float speed;
 	bool deleted;
+
+	float velocity;
+	sf::Vector2f direction;
 
 	sf::RenderWindow* window;
 	sf::Texture* texture;

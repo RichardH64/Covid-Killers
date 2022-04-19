@@ -98,14 +98,6 @@ void GSTileSet::updateSize(float prevWidth, float prevHeight)
 
 	this->totScaleY = this->scaleThird * this->scaleY;
 
-	/*
-	if (static_cast<float>(this->window->getSize().y) < 720.f)
-	{
-		this->scaleY = 1.f;
-		this->totScaleY = this->scaleThird * this->scaleY;
-	}
-	*/
-
 	this->rowPosYOne = this->rowPosYOne * (static_cast<float>(this->window->getSize().y) / prevHeight) + 1.f;
 	this->rowPosYTwo = this->rowPosYOne + this->texture->getSize().y * this->totScaleY;
 	this->rowPosYThree = this->rowPosYTwo + this->texture->getSize().y * this->totScaleY;
@@ -158,62 +150,6 @@ void GSTileSet::update(const float& dt)
 		this->rowPosYTwo = this->rowPosYOne + this->backgroundTileSet[0][0]->getLocalBounds().height * this->backgroundTileSet[0][0]->getScale().y;
 		this->rowPosYThree = this->rowPosYTwo + this->backgroundTileSet[0][0]->getLocalBounds().height * this->backgroundTileSet[0][0]->getScale().y;
 	}
-
-
-	/*
-	if(this->window->getView().getViewport().intersects(this->backgroundTileSet[0][0]->getGlobalBounds()) && this->rowPosYOne < -720.f)
-	{
-		if (static_cast<float>(this->window->getSize().y) == 720.f)
-		{
-			this->rowPosYOne = -720.f;
-		}
-	}
-	*/
-
-	/*
-	if (this->rowPosYOne >= this->window->getSize().y)
-	{
-		std::cout << this->rowPosYOne << std::endl;
-		if (static_cast<float>(this->window->getSize().y) == 720.f)
-		{
-			this->rowPosYOne = -720.f;
-		}
-		else
-		{
-			this->rowPosYOne = -720.f - (static_cast<float>(this->window->getSize().y) - 720.f);
-		}
-		//this->rowPosYOne = -721.f + (static_cast<float>(this->window->getSize().y)/720.f);
-		this->rowPosYTwo = this->rowPosYOne + this->backgroundTileSet[0][0]->getGlobalBounds().height;
-		this->rowPosYThree = this->rowPosYTwo + this->backgroundTileSet[0][0]->getGlobalBounds().height;
-	}
-	*/
-
-	/*
-	if (this->rowPosYOne >= this->window->getSize().y)
-	{
-		this->rowPosYOne = *this->otherTilePos - this->backgroundTileSet[0][0]->getGlobalBounds().height * 3 + 1;
-		this->rowPosYTwo = this->scaleThird * (*this->otherTilePos - this->backgroundTileSet[0][0]->getGlobalBounds().height * 3) + 1;
-		this->rowPosYThree = 2 * this->scaleThird * (*this->otherTilePos - this->backgroundTileSet[0][0]->getGlobalBounds().height * 3) + 1;
-	}
-	*/
-
-	/*
-	if (this->rowPosYOne >= this->window->getSize().y)
-	{
-		this->rowPosYOne = 0.f + (-720.f * (this->window->getSize().y / 720.f));
-		this->rowPosYTwo = this->scaleThird * this->window->getSize().y + (-720.f * (this->window->getSize().y / 720.f));
-		this->rowPosYThree = 2 * this->scaleThird * this->window->getSize().y + (-720.f * (this->window->getSize().y / 720.f));
-	}
-	*/
-
-	/*
-	if (this->rowPosYOne >= this->window->getSize().y)
-	{
-		this->rowPosYOne = 0.f + (-720.f * (this->window->getSize().y / 720.f));
-		this->rowPosYTwo = this->scaleThird * this->window->getSize().y + (-720.f * (this->window->getSize().y / 720.f));
-		this->rowPosYThree = 2 * this->scaleThird * this->window->getSize().y + (-720.f * (this->window->getSize().y / 720.f));
-	}
-	*/
 
 	this->rowPosYOne++;
 	this->rowPosYTwo++;

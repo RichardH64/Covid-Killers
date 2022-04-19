@@ -92,7 +92,7 @@ GameState::GameState(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::V
 	this->booleansGameOver.insert({ "QuitGameState", &this->quit });
 	//---Init Boolean (Maps)---//
 
-	this->level = Level::ONE;
+	this->level = Level::FOUR;
 
 	this->player = new Player(this->window, this->texturePlayer, this->level, 0.f, 540.f, this->keyBinds, this->keyBindPressed);
 	this->enemies.push_back(new Enemy(this->window, this->textureEnemy[EnemyType::SARS], this->level, static_cast<float>(rand() % (this->window->getSize().x + 1)), 0.f, EnemyType::SARS));

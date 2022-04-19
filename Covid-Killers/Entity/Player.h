@@ -43,9 +43,9 @@ public:
 
 	void updateLevel();
 	void updateTimers(const float& dt);
-	void updateMovement();
+	void updateMovement(const float& dt);
 	void updateBlast();
-	void updateInput();
+	void updateInput(const float& dt);
 	void updateCollision() override;
 	void updateBars();
 	void updateStats();

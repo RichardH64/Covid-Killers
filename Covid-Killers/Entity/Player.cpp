@@ -4,8 +4,10 @@ Player::Player(sf::RenderWindow* window, sf::Texture* texture, Level level, floa
 {
 	this->kills = 0;
 	this->score = 0;
+
 	this->isSprinting = false;
 	this->spacePressed = false;
+
 	this->blastDrain = 2.475;
 	this->staminaDrain = .1;
 
@@ -14,11 +16,12 @@ Player::Player(sf::RenderWindow* window, sf::Texture* texture, Level level, floa
 
 	this->cooldownEnergyMax = sf::seconds(0.70f); this->cooldownEnergy = this->cooldownEnergyMax;
 	this->cooldownStaminaMax = sf::seconds(0.10f); this->cooldownStamina = this->cooldownStaminaMax;
+	
+	this->velocity = percentRange(300.f, .10f, static_cast<int>(this->level) - 1);
 
 	switch (this->level)
 	{
 	case Level::ONE:
-		this->speed = 2.35f; // START
 		this->cooldownSB = sf::seconds(0.65f);
 		this->cooldownSBMax = sf::seconds(0.65f);
 
@@ -27,7 +30,6 @@ Player::Player(sf::RenderWindow* window, sf::Texture* texture, Level level, floa
 		this->staminaMax = 116.015625; this->stamina = this->staminaMax;
 		break;
 	case Level::TWO:
-		this->speed = 2.65f; // 2.35 + .30
 		this->cooldownSB = sf::seconds(0.55f);
 		this->cooldownSBMax = sf::seconds(0.55f);
 
@@ -36,7 +38,6 @@ Player::Player(sf::RenderWindow* window, sf::Texture* texture, Level level, floa
 		this->staminaMax = 154.6875; this->stamina = this->staminaMax;
 		break;
 	case Level::THREE:
-		this->speed = 2.95f; // 2.65 + .30
 		this->cooldownSB = sf::seconds(0.45f);
 		this->cooldownSBMax = sf::seconds(0.45f);
 
@@ -45,7 +46,6 @@ Player::Player(sf::RenderWindow* window, sf::Texture* texture, Level level, floa
 		this->staminaMax = 206.25; this->stamina = this->staminaMax;
 		break;
 	case Level::FOUR:
-		this->speed = 3.25f; // 2.95 + .30
 		this->cooldownSB = sf::seconds(0.35f);
 		this->cooldownSBMax = sf::seconds(0.35f);
 
@@ -121,11 +121,12 @@ void Player::spawnExoplosion()
 
 void Player::updateLevel()
 {
+	this->level = static_cast<Level>((static_cast<int>(this->level) + 1));
+	this->velocity = percentRange(300.f, .10f, static_cast<int>(this->level) - 1);
+
 	switch (this->level)
 	{
 	case Level::ONE:
-		this->level = Level::TWO;
-		this->speed = 2.65f;
 		this->cooldownSB = sf::seconds(0.55f);
 		this->cooldownSBMax = sf::seconds(0.55f);
 
@@ -134,8 +135,6 @@ void Player::updateLevel()
 		this->staminaMax = 154.6875; this->stamina = this->staminaMax;
 		break;
 	case Level::TWO:
-		this->level = Level::THREE;
-		this->speed = 2.95f; // 2.65 + .30
 		this->cooldownSB = sf::seconds(0.45f);
 		this->cooldownSBMax = sf::seconds(0.45f);
 
@@ -144,8 +143,6 @@ void Player::updateLevel()
 		this->staminaMax = 206.25; this->stamina = this->staminaMax;
 		break;
 	case Level::THREE:
-		this->level = Level::FOUR;
-		this->speed = 3.25f;
 		this->cooldownSB = sf::seconds(0.35f);
 		this->cooldownSBMax = sf::seconds(0.35f);
 
@@ -154,7 +151,6 @@ void Player::updateLevel()
 		this->staminaMax = 275; this->stamina = this->staminaMax;
 		break;
 	case Level::FOUR:
-		this->level = Level::FIVE;
 		break;
 	case Level::FIVE:
 		break;
@@ -168,66 +164,45 @@ void Player::updateTimers(const float& dt)
 	this->cooldownStamina += sf::seconds(dt);
 }
 
-void Player::updateMovement()
+void Player::updateMovement(const float& dt)
 {
 	//Keyboard Input
-	if (this->keyBindPressed->at("MOVE_UP"))
+	if ((this->keyBindPressed->at("MOVE_LEFT") && this->keyBindPressed->at("MOVE_RIGHT")) || (!this->keyBindPressed->at("MOVE_LEFT") && !this->keyBindPressed->at("MOVE_RIGHT")))
 	{
-		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) && this->stamina > 0.0 && (this->stamina > this->staminaDrain * 2.0 || this->isSprinting)) 
-		{ 	
-			this->sprite.move(0.f, -(this->speed * 2.5f));
-			this->stamina -= this->staminaDrain; 
-			this->isSprinting = true; 
-		}
-		else 
-		{ 
-			this->sprite.move(0.f, -this->speed);
-			this->isSprinting = false; 
-		}
+		this->direction.x = 0.f;
 	}
-	else if (this->keyBindPressed->at("MOVE_DOWN"))
+	else if (this->keyBindPressed->at("MOVE_LEFT"))
 	{
-		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) && this->stamina > 0.0 && (this->stamina > this->staminaDrain * 2.0 || this->isSprinting))
-		{
-			this->sprite.move(0.f, (this->speed * 2.5f));
-			this->stamina -= this->staminaDrain;
-			this->isSprinting = true;
-		}
-		else
-		{
-			this->sprite.move(0.f, this->speed);
-			this->isSprinting = false;
-		}
-	}
-
-	if (this->keyBindPressed->at("MOVE_LEFT"))
-	{
-		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) && this->stamina > 0.0 && (this->stamina > this->staminaDrain * 2.0 || this->isSprinting))
-		{
-			this->sprite.move(-(this->speed * 2.5f), 0.f);
-			this->stamina -= this->staminaDrain;
-			this->isSprinting = true;
-		}
-		else
-		{
-			this->sprite.move(-this->speed, 0.f);
-			this->isSprinting = false;
-		}
+		this->direction.x = -1.f;
 	}
 	else if (this->keyBindPressed->at("MOVE_RIGHT"))
 	{
-		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) && this->stamina > 0.0 && (this->stamina > this->staminaDrain * 2.0 || this->isSprinting))
-		{
-			this->sprite.move((this->speed * 2.5f), 0.f);
-			this->stamina -= this->staminaDrain;
-			this->isSprinting = true;
-		}
-		else
-		{
-			this->sprite.move(this->speed, 0.f);
-			this->isSprinting = false;
-		}
+		this->direction.x = 1.f;
 	}
+
+	if ((this->keyBindPressed->at("MOVE_UP") && this->keyBindPressed->at("MOVE_DOWN")) || (!this->keyBindPressed->at("MOVE_UP") && !this->keyBindPressed->at("MOVE_DOWN")))
+	{
+		this->direction.y = 0.f;
+	}
+	else if (this->keyBindPressed->at("MOVE_UP"))
+	{
+		this->direction.y = -1.f;
+	}
+	else if (this->keyBindPressed->at("MOVE_DOWN"))
+	{
+		this->direction.y = 1.f;
+	}
+
+	if (this->keyBindPressed->at("SPRINT"))
+	{
+		this->isSprinting = true;
+	}
+	else
+	{
+		this->isSprinting = false;
+	}
+
+	this->sprite.move(normalize(this->direction) * this->velocity * dt);
 }
 
 void Player::updateBlast()
@@ -243,9 +218,9 @@ void Player::updateBlast()
 	}
 }
 
-void Player::updateInput()
+void Player::updateInput(const float& dt)
 {
-	this->updateMovement();
+	this->updateMovement(dt);
 	this->updateBlast();
 }
 
@@ -333,7 +308,7 @@ void Player::update(const float& dt)
 {
 	// Movement / Windows Collision
 	this->updateTimers(dt);
-	this->updateInput();
+	this->updateInput(dt);
 	this->updateCollision();
 	this->updateBars();
 	this->updateStats();

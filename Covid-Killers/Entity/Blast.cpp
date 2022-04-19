@@ -10,23 +10,8 @@ Blast::Blast(sf::RenderWindow* window, sf::Texture* texture, Level level, float 
 	
 	this->damage = 15.0;
 
-	switch (this->level)
-	{
-	case Level::ONE:
-		this->speed = 1.625;
-		break;
-	case Level::TWO:
-		this->speed = 1.70f; // 1.625 + .075
-		break;
-	case Level::THREE:
-		this->speed = 1.85f; // 1.70 + .30
-		break;
-	case Level::FOUR:
-		this->speed = 2.15f; // 1.85 + .30
-		break;
-	case Level::FIVE:
-		break;
-	}
+	this->direction.y = -1.f;
+	this->velocity = percentRange(200.f, .20f, static_cast<int>(this->level) - 1);
 }
 
 Blast::~Blast()
@@ -56,7 +41,7 @@ void Blast::update(const float& dt)
 {
 	this->updateCollision();
 
-	this->sprite.move(0.f, -this->speed);
+	this->sprite.move(normalize(this->direction) * this->velocity * dt);
 }
 
 void Blast::render(sf::RenderTarget* target)
