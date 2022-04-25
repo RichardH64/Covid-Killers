@@ -10,7 +10,7 @@ class Entity
 {
 protected:
 	Level level;
-	float x, y, width, height, scaleX, scaleY;
+	float width, height;
 	float speed;
 	bool deleted;
 

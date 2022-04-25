@@ -56,11 +56,13 @@ void GameState::initTextures()
 
 void GameState::initBackground()
 {
-	this->backgrounds[0] = new TileMoving(this->window, this->textureBackground, 0.f, -1.f * static_cast<float>(this->window->getSize().y), 150.f, sf::Vector2f(0.f, 1.f));
-	this->backgrounds[1] = new TileMoving(this->window, this->textureBackground, 0.f, 0.f, 150.f, sf::Vector2f(0.f, 1.f));
+	this->backgrounds[0] = new TileMoving(this->window, this->textureBackground, 0.f, -2.f * static_cast<float>(this->window->getSize().y), 150.f, sf::Vector2f(0.f, 1.f));
+	this->backgrounds[1] = new TileMoving(this->window, this->textureBackground, 0.f, -1.f * static_cast<float>(this->window->getSize().y), 150.f, sf::Vector2f(0.f, 1.f));
+	this->backgrounds[2] = new TileMoving(this->window, this->textureBackground, 0.f, 0.f, 150.f, sf::Vector2f(0.f, 1.f));
 
 	this->backgrounds[0]->setRelative(this->backgrounds[1]);
-	this->backgrounds[1]->setRelative(this->backgrounds[0]);
+	this->backgrounds[1]->setRelative(this->backgrounds[2]);
+	this->backgrounds[2]->setRelative(this->backgrounds[0]);
 
 	this->border = new Tile(this->window, this->textureBorder, 0.f, 90.f * (static_cast<float>(this->window->getSize().y) / 720.f) * 6.f);
 }
@@ -75,9 +77,6 @@ GameState::GameState(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::V
 	this->initTextures();
 	this->initBackground();
 	this->initButtons();
-
-	this->prevWidth = static_cast<float>(this->window->getSize().x);
-	this->prevHeight = static_cast<float>(this->window->getSize().y);
 
 	//===Init Boolean (Maps)===//
 	this->pause = false;
@@ -140,7 +139,7 @@ GameState::GameState(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::V
 GameState::~GameState()
 {
 	//===Delete GUI===//
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 3; i++)
 	{
 		delete this->backgrounds[i];
 	}
@@ -313,10 +312,10 @@ void GameState::updateTimers(const float& dt)
 
 void GameState::updateBlast(const float& dt)
 {
-	if(this->player->getSpacePressed())
+	if(this->player->getSpawnSingleBlast())
 	{
 		this->blasts.push_back(new Blast(this->window, this->textureBlast[BlastType::SINGLE], this->level, this->player->getSprite().getPosition().x * 2.f + this->player->getSprite().getGlobalBounds().width, this->player->getSprite().getPosition().y));
-		this->player->resetSpacePressed();
+		this->player->resetSpawnSingleBlast();
 	}
 
 	for (int i = 0; i < this->blasts.size(); i++)
@@ -432,30 +431,8 @@ void GameState::updateInput()
 	}
 }
 
-void GameState::updateSize()
-{
-	// Fixes the background sprites, if resolution changed
-	if (this->prevWidth != static_cast<float>(this->window->getSize().x) || this->prevHeight != static_cast<float>(this->window->getSize().y))
-	{
-		for (int i = 0; i < 2; i++)
-		{
-			this->backgrounds[i]->updateSize(this->prevWidth, this->prevHeight);
-		}
-
-		this->border->updateSize(this->prevWidth, this->prevHeight);
-
-		this->prevWidth = static_cast<float>(this->window->getSize().x);
-		this->prevHeight = static_cast<float>(this->window->getSize().y);
-	}
-}
-
 void GameState::update(const float& dt)
 {
-	/*
-	--Check if screen width/height has changed has changed
-	*/
-	this->updateSize();
-
 	if ( (this->cooldownGameOver >= this->cooldownGameOverMax) || (this->player->getHealth() < 0.0) && (!this->gameOver))
 	{
 		this->stateStack.push(new GameOverState(this->window, this->mosPosWindow, this->mosPosView, this->keyBinds, this->keyBindPressed, this->booleansGameOver));
@@ -501,7 +478,7 @@ void GameState::update(const float& dt)
 	//---Update Entities---//
 
 	//===Update GUI===//
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 3; i++)
 	{
 		this->backgrounds[i]->update(dt);
 	}
@@ -552,7 +529,7 @@ void GameState::render(sf::RenderTarget* target)
 		Shield
 		State
 	*/
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 3; i++)
 	{
 		this->backgrounds[i]->render(target);
 	}

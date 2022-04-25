@@ -10,11 +10,10 @@
 class GameState : public State
 {
 private:
-	float prevWidth, prevHeight;
 	int levelFlashCount;
 	sf::Sprite levelBanner;
 
-	TileMoving* backgrounds[2];
+	TileMoving* backgrounds[3];
 	Tile* border;
 
 	//===Textures===//
@@ -74,7 +73,6 @@ public:
 	void updateBlast(const float& dt);
 	void updateEnemies(const float& dt);
 	void updateInput() override;
-	void updateSize();
 	void update(const float& dt) override;
 
 	void renderLevelBanner(sf::RenderTarget* target);

@@ -11,7 +11,6 @@ private:
 	double hp, hpMax;
 	double energy, energyMax;
 	double stamina, staminaMax;
-	double blastDrain, staminaDrain;
 
 	sf::Time cooldownSB, cooldownSBMax; // Cooldown Single Blast
 	sf::Time cooldownEnergy, cooldownEnergyMax; // Cooldown Energy
@@ -20,14 +19,16 @@ private:
 	std::map<std::string, int>* keyBinds;
 	std::map<std::string, bool>* keyBindPressed;
 
-	bool isSprinting, isBlasting, spacePressed;
+	bool spawnSingleBlast;
+	bool spawnMultiBlast;
 	Bar* bars[3];
 
 public:
 	Player(sf::RenderWindow* window, sf::Texture* texture, Level level, float x, float y, std::map<std::string, int>* keyBinds, std::map<std::string, bool>* keyBindPressed);
 	virtual ~Player();
 
-	const bool& getSpacePressed() const;
+	const bool& getSpawnSingleBlast() const;
+	const bool& getSpawnMultiBlast() const;
 	const double& getHealth() const;
 	const int& getKills() const;
 	const int& getScore() const;
@@ -36,22 +37,29 @@ public:
 	void addKill();
 	void addScore(int score);
 
-	void resetSpacePressed();
+	void resetSpawnSingleBlast();
+	void resetSpawnMultiBlast();
 
-	void spawnSingleBlast();
-	void spawnExoplosion();
-
+	//===Update===//
 	void updateLevel();
+
 	void updateTimers(const float& dt);
+
 	void updateMovement(const float& dt);
-	void updateBlast();
+	void updateBlast(const float& dt); 
 	void updateInput(const float& dt);
+
 	void updateCollision() override;
 	void updateBars();
-	void updateStats();
-	void update(const float& dt) override;
 
+	void updateStats(const float& dt);
+
+	void update(const float& dt) override;
+	//---Update---//
+
+	//===Render===//
 	void render(sf::RenderTarget* target) override;
+	//---Render---//
 };
 
 #endif

@@ -3,10 +3,10 @@
 
 Blast::Blast(sf::RenderWindow* window, sf::Texture* texture, Level level, float x, float y) : Entity(window, texture, level, x, y)
 {
-	this->x = x / 2 - this->width / 2;
-	this->y = y - this->height;
+	x = x / 2 - this->width / 2;
+	y = y - this->height;
 
-	this->sprite.setPosition(this->x, this->y);
+	this->sprite.setPosition(x, y);
 	
 	this->damage = 15.0;
 

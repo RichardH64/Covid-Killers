@@ -5,11 +5,7 @@ Player::Player(sf::RenderWindow* window, sf::Texture* texture, Level level, floa
 	this->kills = 0;
 	this->score = 0;
 
-	this->isSprinting = false;
-	this->spacePressed = false;
-
-	this->blastDrain = 2.475;
-	this->staminaDrain = .1;
+	this->spawnSingleBlast = false;
 
 	this->keyBinds = keyBinds;
 	this->keyBindPressed = keyBindPressed;
@@ -58,7 +54,7 @@ Player::Player(sf::RenderWindow* window, sf::Texture* texture, Level level, floa
 	}
 
 	this->bars[0] = new Bar(0.f, 0.f, 300.f, 35.f, &this->hp, &this->hpMax, sf::Color::Red);
-	this->bars[1] = new Bar(0.f, 35.f, 250.f, 35.f, &this->energy, &this->energyMax, sf::Color::Blue);
+	this->bars[1] = new Bar(0.f, 35.f, 250.f, 35.f, &this->energy, &this->energyMax, sf::Color(0, 97, 255));
 	this->bars[2] = new Bar(0.f, 70.f, 200.f, 35.f, &this->stamina, &this->staminaMax, sf::Color::Green);
 }
 
@@ -71,9 +67,14 @@ Player::~Player()
 	}
 }
 
-const bool& Player::getSpacePressed() const
+const bool& Player::getSpawnSingleBlast() const
 {
-	return this->spacePressed;
+	return this->spawnSingleBlast;
+}
+
+const bool& Player::getSpawnMultiBlast() const
+{
+	return this->spawnMultiBlast;
 }
 
 const double& Player::getHealth() const
@@ -106,17 +107,14 @@ void Player::addScore(int score)
 	this->score += score;
 }
 
-void Player::resetSpacePressed()
+void Player::resetSpawnSingleBlast()
 {
-	this->spacePressed = false;
+	this->spawnSingleBlast = false;
 }
 
-void Player::spawnSingleBlast()
+void Player::resetSpawnMultiBlast()
 {
-}
-
-void Player::spawnExoplosion()
-{
+	this->spawnMultiBlast = false;
 }
 
 void Player::updateLevel()
@@ -195,25 +193,38 @@ void Player::updateMovement(const float& dt)
 
 	if (this->keyBindPressed->at("SPRINT"))
 	{
-		this->isSprinting = true;
+		// Stamina Drain = (11 - Level) percent of Max Stamina multiplied by the change in time
+		this->stamina -= this->staminaMax * (.11 - static_cast<double>(this->level)/100.0) * static_cast<double>(dt);
+		this->sprite.move(normalize(this->direction) * percentRange(this->velocity, .75f, 1) * dt);
 	}
 	else
 	{
-		this->isSprinting = false;
+		this->sprite.move(normalize(this->direction) * this->velocity * dt);
 	}
 
-	this->sprite.move(normalize(this->direction) * this->velocity * dt);
 }
 
-void Player::updateBlast()
+void Player::updateBlast(const float& dt)
 {
 	if (this->keyBindPressed->at("SINGLE_BLAST") && this->energy > 0)
 	{
 		if (this->cooldownSB >= this->cooldownSBMax)
 		{
-			this->spacePressed = true;
-			this->energy -= this->blastDrain;
+			// Energy Drain = (110 - Level) percent of Max Energy multiplied by the change in time
+			this->energy -= this->energyMax * (1.1 - static_cast<double>(this->level) / 10.0) * static_cast<double>(dt);
 			this->cooldownSB = sf::seconds(0.f);
+			this->spawnSingleBlast = true;
+		}
+	}	
+	
+	if (this->keyBindPressed->at("MULTI_BLAST") && this->energy > 0)
+	{
+		if (this->cooldownSB >= this->cooldownSBMax)
+		{
+			// Energy Drain = (110 - Level) percent of Max Energy multiplied by the change in time
+			this->energy -= this->energyMax * (1.1 - static_cast<double>(this->level) / 10.0) * static_cast<double>(dt) * 3.0;
+			this->cooldownSB = sf::seconds(0.f);
+			this->spawnMultiBlast = true;
 		}
 	}
 }
@@ -221,28 +232,28 @@ void Player::updateBlast()
 void Player::updateInput(const float& dt)
 {
 	this->updateMovement(dt);
-	this->updateBlast();
+	this->updateBlast(dt);
 }
 
 void Player::updateCollision()
 {
-	// Left Coll
+	// Left Collision
 	if (this->sprite.getGlobalBounds().left < 0.f)
 	{
 		this->sprite.setPosition(0.f, this->sprite.getGlobalBounds().top);
 	}
-	// Right Coll
+	// Right Collision
 	else if (this->sprite.getGlobalBounds().left + this->sprite.getGlobalBounds().width > this->window->getSize().x)
 	{
 		this->sprite.setPosition(this->window->getSize().x - this->sprite.getGlobalBounds().width, this->sprite.getGlobalBounds().top);
 	}
 
-	// Top Coll
+	// Top Collision
 	if (this->sprite.getGlobalBounds().top < 540.f * (static_cast<float>(this->window->getSize().y) / 720.f))
 	{
 		this->sprite.setPosition(this->sprite.getGlobalBounds().left, 540.f * (static_cast<float>(this->window->getSize().y) / 720.f));
 	}
-	// Bottom Coll
+	// Bottom Collision
 	else if (this->sprite.getGlobalBounds().top + this->sprite.getGlobalBounds().height >= this->window->getSize().y)
 	{
 		this->sprite.setPosition(this->sprite.getGlobalBounds().left, this->window->getSize().y - this->sprite.getGlobalBounds().height);
@@ -257,7 +268,7 @@ void Player::updateBars()
 	}
 }
 
-void Player::updateStats()
+void Player::updateStats(const float& dt)
 {
 	//===HEALTH===//
 	if (this->hp < 0.0)
@@ -275,9 +286,9 @@ void Player::updateStats()
 	{
 		this->energy = 0.0;
 	}
-	if (this->cooldownEnergy >= this->cooldownEnergyMax && !this->spacePressed)
+	if (this->cooldownEnergy >= this->cooldownEnergyMax && !this->keyBindPressed->at("SINGLE_BLAST"))
 	{
-		this->energy += this->blastDrain * 1.0 / 3.0;
+		this->energy += this->energyMax * (1.1 + static_cast<double>(this->level) / 10.0) * static_cast<double>(dt);
 		this->cooldownEnergy = sf::seconds(0.f);
 	}
 	if (this->energy > this->energyMax)
@@ -291,9 +302,9 @@ void Player::updateStats()
 	{
 		this->stamina = 0.0;
 	}
-	if (this->cooldownStamina >= this->cooldownStaminaMax && !this->isSprinting)
+	if (this->cooldownStamina >= this->cooldownStaminaMax && !this->keyBindPressed->at("SPRINT"))
 	{
-		this->stamina += 0.3;
+		this->stamina += this->staminaMax * (.50 + static_cast<double>(this->level) / 100.0) * static_cast<double>(dt);
 		this->cooldownStamina = sf::seconds(0.f);
 
 	}
@@ -311,7 +322,7 @@ void Player::update(const float& dt)
 	this->updateInput(dt);
 	this->updateCollision();
 	this->updateBars();
-	this->updateStats();
+	this->updateStats(dt);
 }
 
 void Player::render(sf::RenderTarget* target)
