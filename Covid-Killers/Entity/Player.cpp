@@ -243,20 +243,20 @@ void Player::updateCollision()
 		this->sprite.setPosition(0.f, this->sprite.getGlobalBounds().top);
 	}
 	// Right Collision
-	else if (this->sprite.getGlobalBounds().left + this->sprite.getGlobalBounds().width > this->window->getSize().x)
+	else if (this->sprite.getGlobalBounds().left + this->sprite.getGlobalBounds().width > this->window->getView().getSize().x)
 	{
-		this->sprite.setPosition(this->window->getSize().x - this->sprite.getGlobalBounds().width, this->sprite.getGlobalBounds().top);
+		this->sprite.setPosition(this->window->getView().getSize().x - this->sprite.getGlobalBounds().width, this->sprite.getGlobalBounds().top);
 	}
 
 	// Top Collision
-	if (this->sprite.getGlobalBounds().top < 540.f * (static_cast<float>(this->window->getSize().y) / 720.f))
+	if (this->sprite.getGlobalBounds().top <  540.f * this->window->getView().getSize().y / 720.f)
 	{
-		this->sprite.setPosition(this->sprite.getGlobalBounds().left, 540.f * (static_cast<float>(this->window->getSize().y) / 720.f));
+		this->sprite.setPosition(this->sprite.getGlobalBounds().left, 540.f * this->window->getView().getSize().y / 720.f);
 	}
 	// Bottom Collision
-	else if (this->sprite.getGlobalBounds().top + this->sprite.getGlobalBounds().height >= this->window->getSize().y)
+	else if (this->sprite.getGlobalBounds().top + this->sprite.getGlobalBounds().height >= this->window->getView().getSize().y)
 	{
-		this->sprite.setPosition(this->sprite.getGlobalBounds().left, this->window->getSize().y - this->sprite.getGlobalBounds().height);
+		this->sprite.setPosition(this->sprite.getGlobalBounds().left, this->window->getView().getSize().y - this->sprite.getGlobalBounds().height);
 	}
 }
 

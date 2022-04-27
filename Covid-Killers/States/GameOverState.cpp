@@ -12,13 +12,13 @@ void GameOverState::initTextures()
 	//---Init Button Textures---//
 
 	this->textTitle.setFont(this->fontConnectionII);
-	this->textTitle.setCharacterSize(128);
+	this->textTitle.setCharacterSize(128 * (this->window->getView().getSize().x + this->window->getView().getSize().y) / 2000.f);
 	this->textTitle.setStyle(sf::Text::Bold);
 	this->textTitle.setString("GAME OVER");
-	this->textTitle.setLetterSpacing(1.5f);
+	this->textTitle.setLetterSpacing(1.5f * (this->window->getView().getSize().x + this->window->getView().getSize().y) / 2000.f);
 
-	float titleX = this->window->getSize().x / 2.f - this->textTitle.getGlobalBounds().width / 2.f;
-	float titleY = this->window->getSize().y / 2.f - this->textTitle.getGlobalBounds().height / 2.f - 150.f;
+	float titleX = this->window->getView().getSize().x / 2.f - this->textTitle.getGlobalBounds().width / 2.f;
+	float titleY = this->window->getView().getSize().y / 2.f - this->textTitle.getGlobalBounds().height / 2.f - 150.f * this->window->getView().getSize().y / 720.f;
 
 	this->textTitle.setPosition(sf::Vector2f(titleX, titleY));
 }

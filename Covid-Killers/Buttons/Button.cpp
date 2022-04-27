@@ -1,6 +1,5 @@
 #include "Button.h"
 
-
 const sf::Time Button::lastClickedMax = sf::seconds(0.25f);
 
 Button::Button(sf::RenderWindow* window, sf::Texture* texture, bool* condition, bool boolean, float xPos, float yPos)
@@ -8,15 +7,13 @@ Button::Button(sf::RenderWindow* window, sf::Texture* texture, bool* condition, 
 	//===PRIMARY===//
 	this->window = window;
 
-	this->scaleX = this->window->getSize().x / 1280.f;
-	this->scaleY = this->window->getSize().y / 720.f;
+	this->scaleX = this->window->getView().getSize().x / 1280.f;
+	this->scaleY = this->window->getView().getSize().y / 720.f;
 
 	this->lastClicked = this->lastClickedMax;
 	//---PRIMARY---//
 
 	//===BASIC DATA===//
-	this->unfilteredXPos = xPos;
-	this->unfilteredYPos = yPos;
 
 	this->condition = condition;
 	this->boolean = boolean;
@@ -24,8 +21,8 @@ Button::Button(sf::RenderWindow* window, sf::Texture* texture, bool* condition, 
 
 	this->width = texture->getSize().x * this->scaleX;
 	this->height = texture->getSize().y * this->scaleY;
-	this->xPos = this->window->getSize().x / 2.f - this->width / 2.f + (xPos * (this->window->getSize().x / 1280.f));
-	this->yPos = this->window->getSize().y / 2.f - this->height / 2.f + (yPos * (this->window->getSize().y / 720.f));
+	this->xPos = this->window->getView().getSize().x / 2.f - this->width / 2.f + xPos * this->scaleX;
+	this->yPos = this->window->getView().getSize().y / 2.f - this->height / 2.f + yPos * this->scaleY;
 	//---BASIC DATA===//
 
 	//===GRAPHICS===//
@@ -47,8 +44,8 @@ void Button::onClick()
 
 void Button::setActive()
 {
-	this->sprite.setScale(sf::Vector2f(this->scaleX + .05f, this->scaleY + .05f));
-	this->sprite.setPosition(this->xPos - 7.5f, this->yPos - 7.5f);
+	this->sprite.setScale(sf::Vector2f(this->scaleX + .05f * this->scaleX, this->scaleY + .05f * this->scaleY));
+	this->sprite.setPosition(this->xPos - 7.5f * this->scaleX, this->yPos - 7.5f * this->scaleY);
 
 	this->active = true;
 }

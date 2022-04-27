@@ -23,7 +23,7 @@ void Game::initWindow()
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
 
-    this->window = new sf::RenderWindow(window_bounds, title, sf::Style::Titlebar | sf::Style::Close, settings);
+    this->window = new sf::RenderWindow(window_bounds, title, sf::Style::Default, settings);
     this->window->setFramerateLimit(frame_limit);
     this->window->setVerticalSyncEnabled(vertical_sync_enabled);
 

@@ -23,18 +23,18 @@ void TileMoving::update(const float& dt)
 	float x = this->sprite.getPosition().x;
 	float y = this->sprite.getPosition().y;
 
-	if (this->sprite.getPosition().x > static_cast<float>(this->window->getSize().x))
+	if (this->sprite.getPosition().x > this->window->getView().getSize().x)
 	{
 		if (relative)
 		{
-			x = this->relative->getSprite().getPosition().x - this->sprite.getGlobalBounds().width + (this->sprite.getGlobalBounds().width * 0.01f);
+			x = this->relative->getSprite().getPosition().x - this->sprite.getGlobalBounds().width + (this->sprite.getGlobalBounds().width * 0.01f * this->scaleX);
 		}
 		else
 		{
 			x = 0.f;
 		}
 	}	
-	if (this->sprite.getPosition().y > static_cast<float>(this->window->getSize().y))
+	if (this->sprite.getPosition().y > this->window->getView().getSize().y)
 	{
 		if (relative)
 		{

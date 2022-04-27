@@ -5,8 +5,8 @@ Tile::Tile(sf::RenderWindow* window, sf::Texture* texture, float x, float y)
 	//===PRIMARY===//
 	this->window = window;
 
-	this->scaleX = this->window->getSize().x / 1280.f;
-	this->scaleY = this->window->getSize().y / 720.f;
+	this->scaleX = this->window->getView().getSize().x / 1280.f;
+	this->scaleY = this->window->getView().getSize().y / 720.f;
 	//---PRIMARY---//
 
 	//===GRAPHICS===//
@@ -27,12 +27,12 @@ const sf::Sprite& Tile::getSprite() const
 
 void Tile::updateSize(float prevWidth, float prevHeight)
 {
-	this->scaleY = this->window->getSize().y / 720.f;
+	/*
+	float y = this->sprite.getPosition().y * this->window->getView().getSize().y / prevHeight;
 
-	float y = this->sprite.getPosition().y * (static_cast<float>(this->window->getSize().y) / prevHeight);
-
-	this->sprite.setScale(sf::Vector2f(this->scaleX, this->scaleY));
 	this->sprite.setPosition(sf::Vector2f(this->sprite.getPosition().x, y));
+
+	*/
 }
 
 void Tile::update(const float& dt)

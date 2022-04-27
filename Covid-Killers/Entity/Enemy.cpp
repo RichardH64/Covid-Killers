@@ -2,11 +2,11 @@
 
 int Enemy::calcScore()
 {
-	if (static_cast<float>(this->sprite.getGlobalBounds().top) <= 100.f * (static_cast<float>(this->window->getSize().y) / 720.f))
+	if (static_cast<float>(this->sprite.getGlobalBounds().top) <= 100.f * this->window->getView().getSize().y / 720.f)
 	{
 		return this->score * 3;
 	}
-	return static_cast<int>(this->score * (1 + this->sprite.getGlobalBounds().top / (540.f * (static_cast<float>(this->window->getSize().y) / 720.f))));
+	return static_cast<int>(this->score * (1 + this->sprite.getGlobalBounds().top / (540.f * this->window->getView().getSize().y / 720.f)));
 }
 
 Enemy::Enemy(sf::RenderWindow* window, sf::Texture* texture, Level level, float x, float y, EnemyType type) : Entity(window, texture, level, x, y)
@@ -116,7 +116,7 @@ void Enemy::updateBlastCollision(std::vector<Blast*> blasts, Player* player)
 
 void Enemy::updateBorderCollision(Player* player)
 {
-	if (this->sprite.getGlobalBounds().top + this->height >= 540.f * (static_cast<float>(this->window->getSize().y) / 720.f))
+	if (this->sprite.getGlobalBounds().top + this->height >= 540.f * this->window->getView().getSize().y / 720.f)
 	{
 		player->setHealth(player->getHealth() - this->damage);
 		this->deleted = true;
