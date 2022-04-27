@@ -77,6 +77,9 @@ GameState::GameState(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::V
 	this->initTextures();
 	this->initBackground();
 	this->initButtons();
+	
+	float scaleX = this->window->getView().getSize().x / 1280.f;
+	float scaleY = this->window->getView().getSize().y / 720.f;
 
 	//===Init Boolean (Maps)===//
 	this->pause = false;
@@ -93,8 +96,14 @@ GameState::GameState(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::V
 
 	this->level = Level::ONE;
 
-	this->player = new Player(this->window, this->texturePlayer, this->level, 0.f, 540.f * this->window->getView().getSize().y / 720.f, this->keyBinds, this->keyBindPressed);
+	this->player = new Player(this->window, this->texturePlayer, this->level, 0.f, 540.f * scaleY, this->keyBinds, this->keyBindPressed);
 	this->enemies.push_back(new Enemy(this->window, this->textureEnemy[EnemyType::SARS], this->level, static_cast<float>(rand() % (static_cast<int>(this->window->getView().getSize().x) + 1)), 0.f, EnemyType::SARS));
+
+	//===Init GUI===//
+	this->bars[0] = new Bar(0.f, 0.f, 300.f * scaleX, 35.f * scaleY, this->player->getStatPtr('h', false), this->player->getStatPtr('h', true), sf::Color::Red);
+	this->bars[1] = new Bar(0.f, 35.f * scaleY, 250.f * scaleX, 35.f * scaleY, this->player->getStatPtr('e', false), this->player->getStatPtr('e', true), sf::Color(0, 97, 255));
+	this->bars[2] = new Bar(0.f, 70.f * scaleY, 200.f * scaleX, 35.f * scaleY, this->player->getStatPtr('s', false), this->player->getStatPtr('s', true), sf::Color::Green);
+	//---Init GUI---//
 
 	//===Init Timers===//
 	this->cooldownPauseCreationMax = sf::seconds(0.5f);
@@ -132,6 +141,7 @@ GameState::GameState(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::V
 
 	//===Init Level Banner===//
 	this->levelBanner.setTexture(*this->textureLevel[this->level]);
+	this->levelBanner.setScale(sf::Vector2f(scaleX, scaleY));
 	this->levelBanner.setPosition(this->window->getView().getSize().x / 2.f - this->levelBanner.getGlobalBounds().width / 2.f, 12.5f);
 	//---Init Level Banner---//
 }
@@ -144,6 +154,12 @@ GameState::~GameState()
 		delete this->backgrounds[i];
 	}
 	delete this->border;
+
+	for (int i = 0; i < 3; i++)
+	{
+		delete this->bars[i];
+		this->bars[i] = nullptr;
+	}
 	//---Delete GUI---//
 
 	//===Delete Entities===//
@@ -437,9 +453,10 @@ void GameState::update(const float& dt)
 	if ( (this->cooldownGameOver >= this->cooldownGameOverMax) || (this->player->getHealth() < 0.0) && (!this->gameOver))
 	{
 		this->stateStack.push(new GameOverState(this->window, this->mosPosWindow, this->mosPosView, this->keyBinds, this->keyBindPressed, this->booleansGameOver));
-		this->player->updateBars();
-		this->player->updateBars();
-		this->player->updateBars();
+		for (int i = 0; i < 3; i++)
+		{
+			this->bars[i]->update();
+		}
 		this->gameOver = true;
 	}
 
@@ -483,6 +500,12 @@ void GameState::update(const float& dt)
 	{
 		this->backgrounds[i]->update(dt);
 	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		this->bars[i]->update();
+	}
+
 	this->border->update(dt);
 	//---Update GUI---//
 }
@@ -550,6 +573,12 @@ void GameState::render(sf::RenderTarget* target)
 	//===Render Entities===//
 
 	this->renderLevelBanner(target);
+
+	for (int i = 0; i < 3; i++)
+	{
+		this->bars[i]->render(target);
+	}
+
 	this->border->render(target);
 
 	if (!this->stateStack.empty()) // As long as the stack is not empty, it will render the top

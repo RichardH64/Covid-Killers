@@ -25,7 +25,7 @@ void TitleState::initTextures()
 	this->background = new Tile(this->window, this->textureBackground, 0.f, 0.f);
 
 	this->textTitle.setFont(this->fontConnectionII);
-	this->textTitle.setCharacterSize(128 * (this->window->getView().getSize().x + this->window->getView().getSize().y) / 2000.f );
+	this->textTitle.setCharacterSize(static_cast<unsigned int>(128.f * (this->window->getView().getSize().x + this->window->getView().getSize().y) / 2000.f));
 	this->textTitle.setStyle(sf::Text::Bold);
 	this->textTitle.setString("COVID KILLERS");
 	this->textTitle.setLetterSpacing(1.1f * (this->window->getView().getSize().x + this->window->getView().getSize().y) / 2000.f);

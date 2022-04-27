@@ -2,7 +2,6 @@
 #define PLAYER_H
 
 #include "Blast.h"
-#include "../GUI/Bar.h"
 
 class Player : public Entity
 {
@@ -21,8 +20,6 @@ private:
 
 	bool spawnSingleBlast;
 	bool spawnMultiBlast;
-	Bar* bars[3];
-
 public:
 	Player(sf::RenderWindow* window, sf::Texture* texture, Level level, float x, float y, std::map<std::string, int>* keyBinds, std::map<std::string, bool>* keyBindPressed);
 	virtual ~Player();
@@ -32,6 +29,8 @@ public:
 	const double& getHealth() const;
 	const int& getKills() const;
 	const int& getScore() const;
+
+	double* getStatPtr(char type, bool max);
 
 	void setHealth(double val);
 	void addKill();
@@ -50,7 +49,6 @@ public:
 	void updateInput(const float& dt);
 
 	void updateCollision() override;
-	void updateBars();
 
 	void updateStats(const float& dt);
 

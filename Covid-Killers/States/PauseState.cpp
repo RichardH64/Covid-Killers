@@ -14,7 +14,7 @@ void PauseState::initTextures()
 	//---Init Button Textures---//
 
 	this->textTitle.setFont(this->fontConnectionII);
-	this->textTitle.setCharacterSize(128 * (this->window->getView().getSize().x + this->window->getView().getSize().y) / 2000.f);
+	this->textTitle.setCharacterSize(static_cast<unsigned int>(128.f * (this->window->getView().getSize().x + this->window->getView().getSize().y) / 2000.f));
 	this->textTitle.setStyle(sf::Text::Bold);
 	this->textTitle.setString("PAUSE");
 	this->textTitle.setLetterSpacing(1.5f * (this->window->getView().getSize().x + this->window->getView().getSize().y) / 2000.f);

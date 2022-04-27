@@ -4,6 +4,7 @@
 #include "../TileSets/TileMoving.h"
 #include "../Entity/Enemy.h"
 #include "../Entity/Player.h"
+#include "../GUI/Bar.h"
 #include "PauseState.h"
 #include "GameOverState.h"
 
@@ -11,10 +12,6 @@ class GameState : public State
 {
 private:
 	int levelFlashCount;
-	sf::Sprite levelBanner;
-
-	TileMoving* backgrounds[3];
-	Tile* border;
 
 	//===Textures===//
 	sf::Texture* textureBackground;
@@ -27,6 +24,13 @@ private:
 	std::map<EnemyType, sf::Texture*> textureEnemy;
 	std::map<BlastType, sf::Texture*> textureBlast;
 	//---Textures---//
+
+	//===GUI===//
+	sf::Sprite levelBanner;
+	TileMoving* backgrounds[3];
+	Tile* border;
+	Bar* bars[3];
+	//===GUI===//
 
 	//===Booleans===//
 	bool pause, restart, gameOver, renderBanner;

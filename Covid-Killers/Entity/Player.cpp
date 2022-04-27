@@ -52,19 +52,10 @@ Player::Player(sf::RenderWindow* window, sf::Texture* texture, Level level, floa
 	case Level::FIVE:
 		break;
 	}
-
-	this->bars[0] = new Bar(0.f, 0.f, 300.f, 35.f, &this->hp, &this->hpMax, sf::Color::Red);
-	this->bars[1] = new Bar(0.f, 35.f, 250.f, 35.f, &this->energy, &this->energyMax, sf::Color(0, 97, 255));
-	this->bars[2] = new Bar(0.f, 70.f, 200.f, 35.f, &this->stamina, &this->staminaMax, sf::Color::Green);
 }
 
 Player::~Player()
 {
-	for (int i = 0; i < 3; i++)
-	{
-		delete this->bars[i];
-		this->bars[i] = nullptr;
-	}
 }
 
 const bool& Player::getSpawnSingleBlast() const
@@ -90,6 +81,28 @@ const int& Player::getKills() const
 const int& Player::getScore() const
 {
 	return this->score;
+}
+
+double* Player::getStatPtr(char type, bool max)
+{
+	switch (type)
+	{
+	case 'h':
+	case 'H':
+		if (max) { return &this->hpMax; }
+		return &this->hp;
+	case 'e':
+	case 'E':
+		if (max) { return &this->energyMax; }
+		return &this->energy;
+	case 's':
+	case 'S':
+		if (max) { return &this->staminaMax; }
+		return &this->stamina;
+	default:
+		break;
+	}
+	return nullptr;
 }
 
 void Player::setHealth(double val)
@@ -260,14 +273,6 @@ void Player::updateCollision()
 	}
 }
 
-void Player::updateBars()
-{
-	for (int i = 0; i < 3; i++)
-	{
-		this->bars[i]->update();
-	}
-}
-
 void Player::updateStats(const float& dt)
 {
 	//===HEALTH===//
@@ -321,16 +326,10 @@ void Player::update(const float& dt)
 	this->updateTimers(dt);
 	this->updateInput(dt);
 	this->updateCollision();
-	this->updateBars();
 	this->updateStats(dt);
 }
 
 void Player::render(sf::RenderTarget* target)
 {
 	target->draw(this->sprite);
-
-	for (int i = 0; i < 3; i++)
-	{
-		this->bars[i]->render(target);
-	}
 }
