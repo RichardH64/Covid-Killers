@@ -76,20 +76,7 @@ void Game::initKeyBinds()
     for (auto i : this->keyBinds)
     {
         this->keyBindPressed[i.first] = false;
-    }
-
-    // DEBUG REMOVE LATER
-    /*
-    for (auto i : this->keyBinds)
-    {
-        std::cout << i.first << " " << i.second << "\n";
-    }
-    
-    for (auto i : this->keyBindPressed)
-    {
-        std::cout << i.first << " " << i.second << "\n";
-    }
-    */
+    }   
 }
 
 void Game::initStates()

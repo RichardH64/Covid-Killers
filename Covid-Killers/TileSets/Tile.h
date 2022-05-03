@@ -16,7 +16,6 @@ public:
 
 	const sf::Sprite& getSprite() const;
 
-	void updateSize(float prevWidth, float prevHeight);
 	void update(const float& dt);
 	void render(sf::RenderTarget* target);
 };

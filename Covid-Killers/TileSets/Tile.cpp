@@ -25,16 +25,6 @@ const sf::Sprite& Tile::getSprite() const
 	return this->sprite;
 }
 
-void Tile::updateSize(float prevWidth, float prevHeight)
-{
-	/*
-	float y = this->sprite.getPosition().y * this->window->getView().getSize().y / prevHeight;
-
-	this->sprite.setPosition(sf::Vector2f(this->sprite.getPosition().x, y));
-
-	*/
-}
-
 void Tile::update(const float& dt)
 {
 }
