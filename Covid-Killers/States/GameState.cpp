@@ -240,89 +240,101 @@ EnemyType GameState::randomEnemy()
 	}
 }
 
+void GameState::updateGlobalTimer(const float& dt)
+{
+	switch (this->stateStack.empty())
+	{
+	case false:
+		this->cdStateDeletion += sf::seconds(dt);
+		break;
+	case true:
+		this->cdStateCreation += sf::seconds(dt);
+		break;
+	default:
+		break;
+	}
+}
+
+void GameState::updateGlobalInput()
+{
+	if (this->keyBindPressed->at("PAUSE"))
+	{
+		switch (this->stateStack.empty())
+		{
+		case false:
+			if (this->cdStateDeletion.asSeconds() >= this->cdStateChangeMax)
+			{
+				this->stateStack.top()->setQuit();
+				this->stateStack.top()->confirmQuit();
+
+				if (this->stateStack.top()->getQuit()) // Done Twice because the it will first confirm that user still chooses to quit, saving etc
+				{
+					this->stateStack.top()->endState();
+					delete this->stateStack.top();
+					this->stateStack.pop();
+				}
+
+				this->cdStateDeletion = sf::seconds(0.f); // RESET
+			}
+			break;
+		case true:
+			if (this->cdStateCreation.asSeconds() >= this->cdStateChangeMax)
+			{
+				this->stateStack.push(new PauseState(this->window, this->mosPosWindow, this->mosPosView, this->keyBinds, this->keyBindPressed, this->booleansPause));
+
+				this->cdStateCreation = sf::seconds(0.f); // RESET
+			}
+			break;
+		default:
+			break;
+		}
+	}
+}
+
 void GameState::updateLevel()
 {
-	switch (this->level)
+	int scores[] = {2500, 7500, 17500, 40000, 0};
+	std::map<Level, int> levelScores;
+	for (int i = 0; i < 5; i++)
 	{
-	case Level::ONE:
-		if (this->player->getScore() >= 2500)
+		levelScores.insert({static_cast<Level>(i), scores[i]});
+	}
+
+	if (this->player->getScore() >= levelScores[this->level])
+	{
+		if (this->level == Level::FIVE)
 		{
-			this->level = Level::TWO;
-			this->levelBanner.setTexture(*this->textureLevel[this->level]);
-			
-			this->player->updateLevel();
+			return;
+		}
+
+		this->level = static_cast<Level>(static_cast<int>(this->level) + 1);
+		this->levelBanner.setTexture(*this->textureLevel[this->level]);
+		this->player->updateLevel();
+
+		switch (this->level)
+		{
+		case Level::ONE:
 			this->enemies.push_back(new Enemy(this->window, this->textureEnemy[EnemyType::DELTA], this->level, static_cast<float>(rand() % (static_cast<int>(this->window->getView().getSize().x) + 1)), 0.f, EnemyType::DELTA));
-
-			this->cooldownEnemySpawnMax = sf::seconds(2.5f);
-			this->cooldownEnemySpawn = this->cooldownEnemySpawnMax;
-			this->cooldownGameOver = sf::seconds(0.f);
-
-			this->cooldownLevelStay = sf::seconds(0.f);
-			this->cooldownLevelHide = sf::seconds(0.f);
-			this->cooldownLevelFull = sf::seconds(0.f);
-			this->levelFlashCount = 0;
-		}
-		break;
-	case Level::TWO:
-		if (this->player->getScore() >= 7500)
-		{
-			this->level = Level::THREE;
-			this->levelBanner.setTexture(*this->textureLevel[this->level]);
-			
-			this->player->updateLevel();
+			break;
+		case Level::TWO:
 			this->enemies.push_back(new Enemy(this->window, this->textureEnemy[EnemyType::OMI], this->level, static_cast<float>(rand() % (static_cast<int>(this->window->getView().getSize().x) + 1)), 0.f, EnemyType::OMI));
-
-			this->cooldownEnemySpawnMax = sf::seconds(2.25f);
-			this->cooldownEnemySpawn = this->cooldownEnemySpawnMax;
-			this->cooldownGameOver = sf::seconds(0.f);
-
-			this->cooldownLevelStay = sf::seconds(0.f);
-			this->cooldownLevelHide = sf::seconds(0.f);
-			this->cooldownLevelFull = sf::seconds(0.f);
-			this->levelFlashCount = 0;
-		}
-		break;
-	case Level::THREE:
-		if (this->player->getScore() >= 17500)
-		{
-			this->level = Level::FOUR;
-			this->levelBanner.setTexture(*this->textureLevel[this->level]);
-			
-			this->player->updateLevel();
+			break;
+		case Level::THREE:
 			EnemyType ran;
 			ran = this->randomEnemy();
 			this->enemies.push_back(new Enemy(this->window, this->textureEnemy[ran], this->level, static_cast<float>(rand() % (static_cast<int>(this->window->getView().getSize().x) + 1)), 0.f, ran));
-			
-			this->cooldownEnemySpawnMax = sf::seconds(2.0f);
-			this->cooldownEnemySpawn = this->cooldownEnemySpawnMax;
-			this->cooldownGameOver = sf::seconds(0.f);
-
-			this->cooldownLevelStay = sf::seconds(0.f);
-			this->cooldownLevelHide = sf::seconds(0.f);
-			this->cooldownLevelFull = sf::seconds(0.f);
-			this->levelFlashCount = 0;
+			break;
+		case Level::FOUR:
+			break;
+		case Level::FIVE:
+			break;
 		}
-		break;
-	case Level::FOUR:
-		if (this->player->getScore() >= 40000)
-		{
-			this->level = Level::FIVE;
-			this->levelBanner.setTexture(*this->textureLevel[this->level]);
 
-			this->player->updateLevel();
-			//Spawn Boss
+		this->cdLevelStay = sf::seconds(0.f);
+		this->cdLevelHide = sf::seconds(0.f);
+		this->cdLevelFull = sf::seconds(0.f);
 
-			this->cooldownEnemySpawn = this->cooldownEnemySpawnMax;
-			this->cooldownGameOver = sf::seconds(0.f);
-
-			this->cooldownLevelStay = sf::seconds(0.f);
-			this->cooldownLevelHide = sf::seconds(0.f);
-			this->cooldownLevelFull = sf::seconds(0.f);
-			this->levelFlashCount = 0;
-		}
-		break;
-	case Level::FIVE:
-		break;
+		this->levelFlashCount = 0;
 	}
 }
 
@@ -334,14 +346,14 @@ void GameState::updateTimers(const float& dt)
 
 	if (this->renderBanner)
 	{ 
-		this->cooldownLevelStay += sf::seconds(dt);
+		this->cdLevelStay += sf::seconds(dt);
 	}
 	else 
 	{
-		this->cooldownLevelHide += sf::seconds(dt);
+		this->cdLevelHide += sf::seconds(dt);
 	}
 
-	this->cooldownLevelFull += sf::seconds(dt);
+	this->cdLevelFull += sf::seconds(dt);
 }
 
 void GameState::updateBlast(const float& dt)
@@ -447,59 +459,9 @@ void GameState::updateEnemies(const float& dt)
 	}
 }
 
-void GameState::updateGlobalTimer(const float& dt)
-{
-	switch (this->stateStack.empty())
-	{
-	case false:
-		this->cdStateDeletion += sf::seconds(dt);
-		break;
-	case true:
-		this->cdStateCreation += sf::seconds(dt);
-		break;
-	default:
-		break;
-	}
-}
-
-void GameState::updateGlobalInput()
-{
-	if (this->keyBindPressed->at("PAUSE"))
-	{
-		switch (this->stateStack.empty())
-		{
-		case false:
-			if (this->cdStateDeletion.asSeconds() >= this->cdStateChangeMax)
-			{
-				this->stateStack.top()->setQuit();
-				this->stateStack.top()->confirmQuit();
-
-				if (this->stateStack.top()->getQuit()) // Done Twice because the it will first confirm that user still chooses to quit, saving etc
-				{
-					this->stateStack.top()->endState();
-					delete this->stateStack.top();
-					this->stateStack.pop();
-				}
-
-				this->cdStateDeletion = sf::seconds(0.f); // RESET
-			}
-			break;
-		case true:
-			if (this->cdStateCreation.asSeconds() >= this->cdStateChangeMax)
-			{
-				this->stateStack.push(new PauseState(this->window, this->mosPosWindow, this->mosPosView, this->keyBinds, this->keyBindPressed, this->booleansPause));
-
-				this->cdStateCreation = sf::seconds(0.f); // RESET
-			}
-			break;
-		default:
-			break;
-		}
-	}
-}
-
 void GameState::updateInput()
 {
+
 }
 
 void GameState::updateGameView(const float& dt)
@@ -515,6 +477,27 @@ void GameState::updateGameView(const float& dt)
 	//===BORDER===//
 	this->tileBorder->update(dt, this->window->getDefaultView());
 	//---BORDER---//
+
+	this->updateTimers(dt);
+
+	this->updateInput();
+
+	this->updateLevel();
+
+	//===Update Entities===//
+	this->player->update(dt);
+
+	this->updateBlast(dt);
+
+	this->updateEnemies(dt);
+	//---Update Entities---//
+
+	//===Update GUI===//
+	for (int i = 0; i < 3; i++)
+	{
+		this->bars[i]->update();
+	}
+	//---Update GUI---//
 }
 
 void GameState::update(const float& dt)
@@ -534,44 +517,22 @@ void GameState::update(const float& dt)
 		return;
 	}
 
-	this->updateTimers(dt);
-
-	this->updateInput();
-
-	this->updateLevel();
-
 	this->updateGameView(dt);
-
-	//===Update Entities===//
-	this->player->update(dt);
-
-	this->updateBlast(dt);
-
-	this->updateEnemies(dt);
-	//---Update Entities---//
-
-	//===Update GUI===//
-	for (int i = 0; i < 3; i++)
-	{
-		this->bars[i]->update();
-	}
-
-	//---Update GUI---//
 }
 
 void GameState::renderLevelBanner(sf::RenderTarget* target)
 {
 	if (this->levelFlashCount < 3)
 	{
-		if (this->cooldownLevelStay >= this->cooldownLevelStayMax) // If the banner has stayed long enough
+		if (this->cdLevelStay >= this->cooldownLevelStayMax) // If the banner has stayed long enough
 		{
 			this->renderBanner = false;
-			this->cooldownLevelStay = sf::seconds(0.f);
+			this->cdLevelStay = sf::seconds(0.f);
 		}
-		else if (this->cooldownLevelHide >= this->cooldownLevelHideMax) // If the banner has hid long enough
+		else if (this->cdLevelHide >= this->cooldownLevelHideMax) // If the banner has hid long enough
 		{
 			this->renderBanner = true;
-			this->cooldownLevelHide = sf::seconds(0.f);
+			this->cdLevelHide = sf::seconds(0.f);
 		}
 
 		if (this->renderBanner == true)
@@ -579,10 +540,10 @@ void GameState::renderLevelBanner(sf::RenderTarget* target)
 			target->draw(this->levelBanner); 
 		}
 
-		if (this->cooldownLevelFull >= this->cooldownLevelFullMax)
+		if (this->cdLevelFull >= this->cooldownLevelFullMax)
 		{
 			this->levelFlashCount++;
-			this->cooldownLevelFull = sf::seconds(0.f);
+			this->cdLevelFull = sf::seconds(0.f);
 		}
 	}
 	else
@@ -599,29 +560,7 @@ void GameState::renderGameView(sf::RenderTarget* target)
 		target->draw(*this->tileBackgrounds[i]);
 	}
 	//---BACKGROUND---//
-}
-
-
-void GameState::render(sf::RenderTarget* target)
-{
-	/*
-	* Render Hierarchy
-		Background
-		Player
-		Blast
-		Enemy
-		Shield
-		State
-	*/
-
-	this->renderGameView(target);
-	/*
-		for (int i = 0; i < 3; i++)
-	{
-		this->backgrounds[i]->render(target);
-	}
-	*/
-
+	
 
 	//===Render Entities===//
 	this->player->render(target);
@@ -645,6 +584,12 @@ void GameState::render(sf::RenderTarget* target)
 	}
 
 	target->draw(*this->tileBorder);
+}
+
+
+void GameState::render(sf::RenderTarget* target)
+{
+	this->renderGameView(target);
 
 	if (!this->stateStack.empty()) // As long as the stack is not empty, it will render the top
 	{

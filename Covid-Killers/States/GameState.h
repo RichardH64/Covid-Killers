@@ -52,9 +52,9 @@ private:
 	sf::Time cooldownEnemySpawn, cooldownEnemySpawnMax; // Enemy Spawn Cooldown
 	sf::Time cooldownPauseCreation, cooldownPauseCreationMax; // Pause State Creation Timer
 	sf::Time cooldownGameOver, cooldownGameOverMax; // Pause State Creation Timer
-	sf::Time cooldownLevelHide, cooldownLevelHideMax;
-	sf::Time cooldownLevelStay, cooldownLevelStayMax;
-	sf::Time cooldownLevelFull, cooldownLevelFullMax;
+	sf::Time cdLevelHide, cooldownLevelHideMax;
+	sf::Time cdLevelStay, cooldownLevelStayMax;
+	sf::Time cdLevelFull, cooldownLevelFullMax;
 
 	sf::Time cdStateCreation, cdStateDeletion;
 	static const float cdStateChangeMax;
@@ -77,14 +77,15 @@ public:
 	
 	EnemyType randomEnemy();
 
+	void updateGlobalTimer(const float& dt);
+	void updateGlobalInput() override;
+
 	void updateLevel(); 
 	void updateTimers(const float& dt);
 	void updateGameOver(const float& dt);
 	void updateBlast(const float& dt);
 	void updateEnemies(const float& dt);
 
-	void updateGlobalTimer(const float& dt);
-	void updateGlobalInput() override;
 	void updateInput();
 
 	//===GAME VIEW===//
