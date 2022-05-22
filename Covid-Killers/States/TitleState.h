@@ -3,8 +3,7 @@
 
 #include "State.h"
 #include "../Buttons/Button.h"
-#include "../TileSets/Tile.h"
-
+#include "../TileSets/TileMap.h"
 
 class TitleState : public State
 {
@@ -14,9 +13,10 @@ private:
 	std::map<std::string, sf::Texture*> textureButton;
 	sf::Texture* textureBackground;
 
-	Tile* background;
+	TileMap* tileBackground;
 
 	void initTextures() override;
+	void initAssets() override;
 	void initButtons() override;
 public:
 	//===CONSTRUCTORS||DESTRUCTORS===//
@@ -26,7 +26,7 @@ public:
 	void endState() override;
 	void confirmQuit() override;
 	void resetButton() override;
-	void updateInput() override;
+	void updateGlobalInput() override;
 	void update(const float& dt) override;
 	void render(sf::RenderTarget* target = NULL) override;
 };

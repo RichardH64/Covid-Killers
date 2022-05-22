@@ -44,6 +44,11 @@ const bool& State::getQuit() const
 	return this->quit;
 }
 
+void State::setQuit()
+{
+	this->quit = true;
+}
+
 /*
 void State::checkForQuit()
 {

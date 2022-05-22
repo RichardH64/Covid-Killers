@@ -1,7 +1,8 @@
 #ifndef GAMESTATE_H
 #define GAMESTATE_H
 
-#include "../TileSets/TileMoving.h"
+#include "../TileSets/TileMap.h"
+
 #include "../Entity/Enemy.h"
 #include "../Entity/Player.h"
 #include "../GUI/Bar.h"
@@ -27,8 +28,10 @@ private:
 
 	//===GUI===//
 	sf::Sprite levelBanner;
-	TileMoving* backgrounds[3];
-	Tile* border;
+
+	TileMap* tileBackgrounds[3];
+	TileMap* tileBorder;
+
 	Bar* bars[3];
 	//===GUI===//
 
@@ -52,13 +55,16 @@ private:
 	sf::Time cooldownLevelHide, cooldownLevelHideMax;
 	sf::Time cooldownLevelStay, cooldownLevelStayMax;
 	sf::Time cooldownLevelFull, cooldownLevelFullMax;
+
+	sf::Time cdStateCreation, cdStateDeletion;
+	static const float cdStateChangeMax;
 	//---Timers---//
 
 	std::stack<State*> stateStack;
 	Level level;
 
 	void initTextures() override;
-	void initBackground();
+	void initAssets() override;
 	void initButtons() override;
 public:
 	//===CONSTRUCTORS||DESTRUCTORS===//
@@ -76,10 +82,23 @@ public:
 	void updateGameOver(const float& dt);
 	void updateBlast(const float& dt);
 	void updateEnemies(const float& dt);
-	void updateInput() override;
+
+	void updateGlobalTimer(const float& dt);
+	void updateGlobalInput() override;
+	void updateInput();
+
+	//===GAME VIEW===//
+	void updateGameView(const float& dt);
+	//---GAME VIEW---//
+
 	void update(const float& dt) override;
 
 	void renderLevelBanner(sf::RenderTarget* target);
+
+	//===GAME VIEW===//
+	void renderGameView(sf::RenderTarget* target);
+	//---GAME VIEW---//
+
 	void render(sf::RenderTarget* target = NULL) override;
 };
 

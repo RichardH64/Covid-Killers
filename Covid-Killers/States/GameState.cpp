@@ -1,5 +1,9 @@
 #include "GameState.h"
 
+
+const float GameState::cdStateChangeMax = 0.5f;
+
+
 //===INITIALIZE FUNCTIONS===//
 void GameState::initTextures()
 {
@@ -54,17 +58,29 @@ void GameState::initTextures()
 	//---Init Level Texture---//
 }
 
-void GameState::initBackground()
+void GameState::initAssets()
 {
-	this->backgrounds[0] = new TileMoving(this->window, this->textureBackground, 0.f, -2.f * this->window->getView().getSize().y, 150.f, sf::Vector2f(0.f, 1.f));
-	this->backgrounds[1] = new TileMoving(this->window, this->textureBackground, 0.f, -1.f * this->window->getView().getSize().y, 150.f, sf::Vector2f(0.f, 1.f));
-	this->backgrounds[2] = new TileMoving(this->window, this->textureBackground, 0.f, 0.f, 150.f, sf::Vector2f(0.f, 1.f));
+	sf::Vector2f scale = divideVector(this->window->getDefaultView().getSize(), sf::Vector2f(1280.f, 720.f));
 
-	this->backgrounds[0]->setRelative(this->backgrounds[1]);
-	this->backgrounds[1]->setRelative(this->backgrounds[2]);
-	this->backgrounds[2]->setRelative(this->backgrounds[0]);
-
-	this->border = new Tile(this->window, this->textureBorder, 0.f, 540.f * this->window->getView().getSize().y / 720.f);
+	//===BACKGROUND===//
+	int j = 3;
+	for (int i = 0; i < 3; i++)
+	{
+		this->tileBackgrounds[i] = new TileMap();
+		this->tileBackgrounds[i]->load(this->textureBackground, scale);
+		this->tileBackgrounds[i]->setPosition(sf::Vector2f(0.f, static_cast<float>(--j * this->window->getDefaultView().getSize().y)));
+		this->tileBackgrounds[i]->getMovementComponent().isMoving = true;
+		this->tileBackgrounds[i]->getMovementComponent().hasRelative = true;
+		this->tileBackgrounds[i]->getMovementComponent().velocity = 150.f;
+		this->tileBackgrounds[i]->getMovementComponent().direction = sf::Vector2f(0.f, 1.f);
+	}
+	//---BACKGROUND---//
+	
+	//===BORDER===//
+	this->tileBorder = new TileMap();
+	this->tileBorder->load(this->textureBorder, scale);
+	this->tileBorder->setPosition(multiplyVector(sf::Vector2f(0.f, 540.f), scale));
+	//---BORDER---//
 }
 
 void GameState::initButtons()
@@ -75,9 +91,11 @@ void GameState::initButtons()
 GameState::GameState(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::Vector2f* mosPosView, std::map<std::string, int>* keyBinds, std::map<std::string, bool>* keyBindPressed, std::map<std::string, bool*> booleans) : State(window, mosPosWindow, mosPosView, keyBinds, keyBindPressed, booleans)
 {
 	this->initTextures();
-	this->initBackground();
+	this->initAssets();
 	this->initButtons();
 	
+	sf::Vector2f scale = divideVector(this->window->getDefaultView().getSize(), sf::Vector2f(1280.f, 720.f));
+
 	float scaleX = this->window->getView().getSize().x / 1280.f;
 	float scaleY = this->window->getView().getSize().y / 720.f;
 
@@ -151,9 +169,9 @@ GameState::~GameState()
 	//===Delete GUI===//
 	for (int i = 0; i < 3; i++)
 	{
-		delete this->backgrounds[i];
+		delete this->tileBackgrounds[i];
 	}
-	delete this->border;
+	delete this->tileBorder;
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -429,55 +447,90 @@ void GameState::updateEnemies(const float& dt)
 	}
 }
 
-void GameState::updateInput()
+void GameState::updateGlobalTimer(const float& dt)
+{
+	switch (this->stateStack.empty())
+	{
+	case false:
+		this->cdStateDeletion += sf::seconds(dt);
+		break;
+	case true:
+		this->cdStateCreation += sf::seconds(dt);
+		break;
+	default:
+		break;
+	}
+}
+
+void GameState::updateGlobalInput()
 {
 	if (this->keyBindPressed->at("PAUSE"))
 	{
-		if(this->cooldownPauseCreation >= this->cooldownPauseCreationMax)
+		switch (this->stateStack.empty())
 		{
-			switch (this->pause)
+		case false:
+			if (this->cdStateDeletion.asSeconds() >= this->cdStateChangeMax)
 			{
-			case false:
-				this->pause = true;
-				break;
-			default:
-				break;
+				this->stateStack.top()->setQuit();
+				this->stateStack.top()->confirmQuit();
+
+				if (this->stateStack.top()->getQuit()) // Done Twice because the it will first confirm that user still chooses to quit, saving etc
+				{
+					this->stateStack.top()->endState();
+					delete this->stateStack.top();
+					this->stateStack.pop();
+				}
+
+				this->cdStateDeletion = sf::seconds(0.f); // RESET
 			}
-			this->cooldownPauseCreation = sf::seconds(0.f);
+			break;
+		case true:
+			if (this->cdStateCreation.asSeconds() >= this->cdStateChangeMax)
+			{
+				this->stateStack.push(new PauseState(this->window, this->mosPosWindow, this->mosPosView, this->keyBinds, this->keyBindPressed, this->booleansPause));
+
+				this->cdStateCreation = sf::seconds(0.f); // RESET
+			}
+			break;
+		default:
+			break;
 		}
 	}
 }
 
+void GameState::updateInput()
+{
+}
+
+void GameState::updateGameView(const float& dt)
+{
+	//===BACKGROUND===//
+	int relative[] = { 1, 2, 0 };
+	for (int i = 0; i < 3; i++)
+	{
+		this->tileBackgrounds[i]->update(dt, this->window->getDefaultView(), this->tileBackgrounds[relative[i]]->getPosition());
+	}
+	//---BACKGROUND---//
+
+	//===BORDER===//
+	this->tileBorder->update(dt, this->window->getDefaultView());
+	//---BORDER---//
+}
+
 void GameState::update(const float& dt)
 {
+	this->updateGlobalTimer(dt);
+	this->updateGlobalInput();
+
 	if ( (this->cooldownGameOver >= this->cooldownGameOverMax) || (this->player->getHealth() < 0.0) && (!this->gameOver))
 	{
 		this->stateStack.push(new GameOverState(this->window, this->mosPosWindow, this->mosPosView, this->keyBinds, this->keyBindPressed, this->booleansGameOver));
-		for (int i = 0; i < 3; i++)
-		{
-			this->bars[i]->update();
-		}
 		this->gameOver = true;
-	}
-
-	if ((this->pause && !this->gameOver) && (this->stateStack.empty())) // Checks if the player has initiated pause AND the stack is already empty
-	{
-		this->stateStack.push(new PauseState(this->window, this->mosPosWindow, this->mosPosView, this->keyBinds, this->keyBindPressed, this->booleansPause));
 	}
 
 	if (!this->stateStack.empty()) // If the stack isn't empty, that state will be updated
 	{
 		this->stateStack.top()->update(dt);
-		if (this->stateStack.top()->getQuit())
-		{
-			this->stateStack.top()->confirmQuit();
-			if (this->stateStack.top()->getQuit()) // Done Twice because the it will first confirm that user still chooses to quit, saving etc
-			{
-				this->stateStack.top()->endState();
-				delete this->stateStack.top();
-				this->stateStack.pop();
-			}
-		}
 		return;
 	}
 
@@ -486,6 +539,8 @@ void GameState::update(const float& dt)
 	this->updateInput();
 
 	this->updateLevel();
+
+	this->updateGameView(dt);
 
 	//===Update Entities===//
 	this->player->update(dt);
@@ -498,15 +553,9 @@ void GameState::update(const float& dt)
 	//===Update GUI===//
 	for (int i = 0; i < 3; i++)
 	{
-		this->backgrounds[i]->update(dt);
-	}
-
-	for (int i = 0; i < 3; i++)
-	{
 		this->bars[i]->update();
 	}
 
-	this->border->update(dt);
 	//---Update GUI---//
 }
 
@@ -542,6 +591,17 @@ void GameState::renderLevelBanner(sf::RenderTarget* target)
 	}
 }
 
+void GameState::renderGameView(sf::RenderTarget* target)
+{
+	//===BACKGROUND===//
+	for (int i = 0; i < 3; i++)
+	{
+		target->draw(*this->tileBackgrounds[i]);
+	}
+	//---BACKGROUND---//
+}
+
+
 void GameState::render(sf::RenderTarget* target)
 {
 	/*
@@ -553,10 +613,15 @@ void GameState::render(sf::RenderTarget* target)
 		Shield
 		State
 	*/
-	for (int i = 0; i < 3; i++)
+
+	this->renderGameView(target);
+	/*
+		for (int i = 0; i < 3; i++)
 	{
 		this->backgrounds[i]->render(target);
 	}
+	*/
+
 
 	//===Render Entities===//
 	this->player->render(target);
@@ -579,7 +644,7 @@ void GameState::render(sf::RenderTarget* target)
 		this->bars[i]->render(target);
 	}
 
-	this->border->render(target);
+	target->draw(*this->tileBorder);
 
 	if (!this->stateStack.empty()) // As long as the stack is not empty, it will render the top
 	{

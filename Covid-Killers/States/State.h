@@ -27,9 +27,8 @@ protected:
 	std::vector<Button*> buttons;
 	//---Resources---//
 
-	//Functions
-	//virtual void initKeybinds() = 0;
 	virtual void initTextures() = 0;
+	virtual void initAssets() = 0;
 	virtual void initButtons() = 0;
 
 public:
@@ -38,10 +37,13 @@ public:
 	virtual ~State();
 
 	const bool& getQuit() const;
+	void setQuit();
+
 	virtual void endState() = 0;
 	virtual void confirmQuit() = 0;
 	virtual void resetButton() = 0;
-	virtual void updateInput() = 0;
+
+	virtual void updateGlobalInput() = 0;
 	virtual void update(const float& dt) = 0;
 	virtual void render(sf::RenderTarget* target = NULL) = 0;
 };

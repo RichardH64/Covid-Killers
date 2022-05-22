@@ -161,8 +161,7 @@
     <ClCompile Include="States\PauseState.cpp" />
     <ClCompile Include="States\State.cpp" />
     <ClCompile Include="States\TitleState.cpp" />
-    <ClCompile Include="TileSets\TileMoving.cpp" />
-    <ClCompile Include="TileSets\Tile.cpp" />
+    <ClCompile Include="TileSets\TileMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Buttons\Button.h" />
@@ -181,8 +180,7 @@
     <ClInclude Include="States\PauseState.h" />
     <ClInclude Include="States\State.h" />
     <ClInclude Include="States\TitleState.h" />
-    <ClInclude Include="TileSets\TileMoving.h" />
-    <ClInclude Include="TileSets\Tile.h" />
+    <ClInclude Include="TileSets\TileMap.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Fonts\connection-ii-font.zip" />

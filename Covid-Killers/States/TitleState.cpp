@@ -22,8 +22,6 @@ void TitleState::initTextures()
 	this->textureBackground->loadFromFile("Assets/Tiles/Background.png");
 	//---Init Background Texture---//
 
-	this->background = new Tile(this->window, this->textureBackground, 0.f, 0.f);
-
 	this->textTitle.setFont(this->fontConnectionII);
 	this->textTitle.setCharacterSize(static_cast<unsigned int>(128.f * (this->window->getView().getSize().x + this->window->getView().getSize().y) / 2000.f));
 	this->textTitle.setStyle(sf::Text::Bold);
@@ -34,6 +32,15 @@ void TitleState::initTextures()
 	float titleY = this->window->getView().getSize().y / 2.f - this->textTitle.getGlobalBounds().height / 2.f - 150.f * this->window->getView().getSize().y / 720.f;
 
 	this->textTitle.setPosition(sf::Vector2f(titleX, titleY));
+}
+
+void TitleState::initAssets()
+{
+	sf::Vector2f scale = divideVector(this->window->getDefaultView().getSize(), sf::Vector2f(1280.f, 720.f));
+
+	this->tileBackground = new TileMap();
+	this->tileBackground->load(this->textureBackground, scale);
+	this->tileBackground->setPosition(multiplyVector(sf::Vector2f(0.f, 0.f), scale));
 }
 
 void TitleState::initButtons()
@@ -51,6 +58,7 @@ void TitleState::initButtons()
 TitleState::TitleState(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::Vector2f* mosPosView, std::map<std::string, int>* keyBinds, std::map<std::string, bool>* keyBindPressed,  std::map<std::string, bool*> booleans) : State(window, mosPosWindow, mosPosView, keyBinds, keyBindPressed, booleans)
 {
 	this->initTextures();
+	this->initAssets();
 	this->initButtons();
 }
 
@@ -63,7 +71,7 @@ TitleState::~TitleState()
 	}
 	this->buttons.clear();
 
-	delete this->background;
+	delete this->tileBackground;
 
 	delete this->textureBackground;
 	delete this->textureButton["Start"];
@@ -90,7 +98,7 @@ void TitleState::resetButton()
 	}
 }
 
-void TitleState::updateInput()
+void TitleState::updateGlobalInput()
 {
 }
 
@@ -104,7 +112,7 @@ void TitleState::update(const float& dt)
 
 void TitleState::render(sf::RenderTarget* target)
 {
-	this->background->render(target);
+	target->draw(*this->tileBackground);
 
 	for (int i = 0; i < this->buttons.size(); i++)
 	{

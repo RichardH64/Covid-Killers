@@ -23,6 +23,10 @@ void GameOverState::initTextures()
 	this->textTitle.setPosition(sf::Vector2f(titleX, titleY));
 }
 
+void GameOverState::initAssets()
+{
+}
+
 void GameOverState::initButtons()
 {
 	this->buttons.push_back(new Button(this->window, this->textureButton["Retry"], this->booleans["RetryGameState"], true, 0.f, 225.f));
@@ -33,6 +37,7 @@ void GameOverState::initButtons()
 GameOverState::GameOverState(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::Vector2f* mosPosView, std::map<std::string, int>* keyBinds, std::map<std::string, bool>* keyBindPressed, std::map<std::string, bool*> booleans) : State(window, mosPosWindow, mosPosView, keyBinds, keyBindPressed, booleans)
 {
 	this->initTextures();
+	this->initAssets();
 	this->initButtons();
 }
 
@@ -67,7 +72,7 @@ void GameOverState::resetButton()
 }
 
 
-void GameOverState::updateInput()
+void GameOverState::updateGlobalInput()
 {
 } 
 

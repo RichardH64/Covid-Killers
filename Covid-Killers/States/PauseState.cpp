@@ -1,5 +1,6 @@
 #include "PauseState.h"
 
+
 //===INITIALIZE FUNCTIONS===//
 void PauseState::initTextures()
 {
@@ -12,17 +13,26 @@ void PauseState::initTextures()
 	this->textureButton["Settings"]->loadFromFile("Assets/Buttons/ButtonSettings.png");
 	this->textureButton["Quit"]->loadFromFile("Assets/Buttons/ButtonQuit.png");
 	//---Init Button Textures---//
+}
 
+void PauseState::initText()
+{
 	this->textTitle.setFont(this->fontConnectionII);
-	this->textTitle.setCharacterSize(static_cast<unsigned int>(128.f * (this->window->getView().getSize().x + this->window->getView().getSize().y) / 2000.f));
+	this->textTitle.setCharacterSize(static_cast<unsigned int>(128.f * (this->window->getDefaultView().getSize().x + this->window->getDefaultView().getSize().y) / 2000.f));
 	this->textTitle.setStyle(sf::Text::Bold);
 	this->textTitle.setString("PAUSE");
-	this->textTitle.setLetterSpacing(1.5f * (this->window->getView().getSize().x + this->window->getView().getSize().y) / 2000.f);
+	this->textTitle.setLetterSpacing(1.5f * (this->window->getDefaultView().getSize().x + this->window->getDefaultView().getSize().y) / 2000.f);
 
-	float titleX = this->window->getView().getSize().x / 2.f - this->textTitle.getGlobalBounds().width / 2.f;
-	float titleY = this->window->getView().getSize().y / 2.f - this->textTitle.getGlobalBounds().height / 2.f - 150.f * this->window->getView().getSize().y / 720.f;
+	sf::Vector2f titlePosition;
+	titlePosition.x = this->window->getDefaultView().getSize().x / 2.f - this->textTitle.getGlobalBounds().width / 2.f;
+	titlePosition.y = this->window->getDefaultView().getSize().y / 2.f - this->textTitle.getGlobalBounds().height / 2.f - 150.f * this->window->getDefaultView().getSize().y / 720.f;
 
-	this->textTitle.setPosition(sf::Vector2f(titleX, titleY));
+	this->textTitle.setPosition(titlePosition);
+}
+
+void PauseState::initAssets()
+{
+
 }
 
 void PauseState::initButtons()
@@ -34,12 +44,13 @@ void PauseState::initButtons()
 	this->buttons.push_back(new Button(this->window, this->textureButton["Quit"], this->booleans["QuitGameState"], true, 0.f, 300.f));
 }
 //---INITIALIZE FUNCTIONS---//
+
 PauseState::PauseState(sf::RenderWindow* window, sf::Vector2i* mosPosWindow, sf::Vector2f* mosPosView, std::map<std::string, int>* keyBinds, std::map<std::string, bool>* keyBindPressed, std::map<std::string, bool*> booleans) : State(window, mosPosWindow, mosPosView, keyBinds, keyBindPressed, booleans)
 {
 	this->initTextures();
+	this->initText();
+	this->initAssets();
 	this->initButtons();
-
-	this->cooldownCreationMax = sf::seconds(0.5f);
 }
 
 PauseState::~PauseState()
@@ -58,11 +69,12 @@ PauseState::~PauseState()
 
 void PauseState::endState()
 {
-	*this->booleans["PauseGameState"] = false;
+
 }
 
 void PauseState::confirmQuit()
 {
+
 }
 
 void PauseState::resetButton()
@@ -73,23 +85,13 @@ void PauseState::resetButton()
 	}
 }
 
-
-void PauseState::updateInput()
+void PauseState::updateGlobalInput()
 {
-	if (this->keyBindPressed->at("PAUSE"))
-	{
-		if (this->cooldownCreation >= this->cooldownCreationMax)
-		{
-			this->quit = true;
-		}
-	}
+
 }
 
 void PauseState::update(const float& dt)
 {
-	this->cooldownCreation += sf::seconds(dt);
-	this->updateInput();
-
 	for (int i = 0; i < this->buttons.size(); i++)
 	{
 		this->buttons[i]->update(dt, *this->mosPosView);
@@ -105,4 +107,3 @@ void PauseState::render(sf::RenderTarget* target)
 		this->buttons[i]->render(target);
 	}
 }
-
